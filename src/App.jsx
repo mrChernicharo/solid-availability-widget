@@ -22,7 +22,7 @@ function App() {
 	const [selectedItem, setSelectedItem] = createSignal(null); // {slot, day}
 
 	const timeslots = day => availability()[day];
-	const getTimeslot = (day, id) => availability()[day].find(s => s.id === id);
+	const getSlot = (day, id) => availability()[day].find(s => s.id === id);
 	// const columnAttr = attr => getElementRect(gridRef)[attr];
 
 	function handleClick(e, day) {
@@ -50,7 +50,7 @@ function App() {
 		if (slotClicked) {
 			console.log({ slotClicked });
 			setGesture('drag:ready');
-			setSelectedItem({ slot: slotClicked, day });
+			setSelectedItem({ id: slotClicked.id, day });
 			return;
 		}
 
@@ -68,14 +68,14 @@ function App() {
 		}
 
 		if (gesture() === 'drag:active') {
-			const { slot: oldSlot, day } = selectedItem();
-			const { id, start, end } = oldSlot;
+			const { id, day } = selectedItem();
+			const oldSlot = getSlot(day, id);
+
 			const newSlot = {
 				id,
-				start: start + e.movementY * 1.5,
-				end: end + e.movementY * 1.5,
+				start: oldSlot.start + e.movementY * 1.5,
+				end: oldSlot.end + e.movementY * 1.5,
 			};
-			setSelectedItem({ slot, day });
 
 			setAvailability({
 				...availability(),
