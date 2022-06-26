@@ -1,0 +1,39 @@
+:root {
+	--side-bar-width: 60px;
+}
+
+.App {
+	text-align: center;
+}
+
+.OuterGrid {
+	border: 1px solid;
+	width: min(100vw, 800px);
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: var(--side-bar-width) 1fr;
+	grid-template-rows: 40px 768px;
+}
+
+.TopBar {
+	grid-column: 1 / 3;
+	border: 1px solid;
+
+	display: grid;
+	grid-template-columns: var(--side-bar-width) repeat(7, 1fr);
+	align-items: center;
+}
+
+.TopBar > div {
+	border-left: 1px solid;
+}
+
+.SideBar {
+	grid-column: 1 / 2;
+	border: 1px solid;
+}
+
+.InnerGrid {
+	grid-column: 2 / 3;
+	border: 1px solid;
+}
