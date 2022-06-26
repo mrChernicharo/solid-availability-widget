@@ -4,6 +4,7 @@
 
 .App {
 	text-align: center;
+	touch-action: none;
 }
 
 .Header {
