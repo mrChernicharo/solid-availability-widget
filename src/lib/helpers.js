@@ -21,7 +21,7 @@ export function yPosToTime(yPos, columnHeight, columnTop) {
 	const columnYClick = yPos - columnTop;
 	const ClickVerticalPercentage = (columnYClick / columnHeight) * 100;
 	const timeClicked = (ClickVerticalPercentage * 1440) / 100;
-	return Math.ceil(timeClicked);
+	return Math.round(timeClicked);
 	// return Math.abs(Math.round(timeClicked));
 }
 
@@ -78,25 +78,38 @@ export function mergeTimeslots(timeSlots, overlappingIds) {
 }
 
 export function findOverlappingSlots(timeSlot, timeSlots) {
-	if (!timeSlot.start || !timeSlot.end) return;
+	// if (!timeSlot.start || !timeSlot.end) return;
 
 	const { start, end } = timeSlot;
 
 	// prettier-ignore
 	const overlappingItems = timeSlots.filter(
 		(s, i) =>
-			(start < s.start && start < s.end && end > s.start && end < s.end) || // top overlap
-			(start > s.start && start < s.end && end > s.start && end < s.end) || // fit inside
-			(start > s.start && start < s.end && end > s.start && end > s.end) || // bottom overlap
-			(start < s.start && start < s.end && end > s.start && end > s.end) // encompass
+			(start <= s.start && start <= s.end && end >= s.start && end <= s.end) || // top overlap
+			(start >= s.start && start <= s.end && end >= s.start && end <= s.end) || // fit inside
+			(start >= s.start && start <= s.end && end >= s.start && end >= s.end) || // bottom overlap
+			(start <= s.start && start <= s.end && end >= s.start && end >= s.end) // encompass
 	);
+
+	console.log('findOverlappingSlots', {
+		timeSlot,
+		timeSlots,
+		overlappingItems,
+	});
+
 	return overlappingItems;
 }
 
-export function handleTimeslotsMerge(newTimeSlot, newTimeslots, callback) {
+export function getMergedTimeslots(newTimeSlot, newTimeslots) {
 	const overlappingItems = findOverlappingSlots(newTimeSlot, newTimeslots);
 
-	if (overlappingItems && overlappingItems.length) {
+	// console.log('getMergedTimeslots', {
+	// 	newTimeSlot,
+	// 	newTimeslots,
+	// 	overlappingItems,
+	// });
+
+	if (overlappingItems.length > 0) {
 		const overlappingIds = overlappingItems
 			.map(item => item.id)
 			.concat(newTimeSlot.id);
@@ -109,9 +122,14 @@ export function handleTimeslotsMerge(newTimeSlot, newTimeslots, callback) {
 
 		const mergedSlots = [...filteredSlots, mergedSlot];
 
-		callback(mergedSlots);
+		// console.log({ mergedSlots });
+		return mergedSlots;
+
+		// callback(mergedSlots);
 	} else {
-		callback(newTimeslots);
+		// callback(newTimeslots);
+		// console.log({ newTimeslots });
+		return [...newTimeslots, newTimeSlot];
 	}
 }
 

@@ -16,6 +16,16 @@ export const ID_CHARS =
 // 	'sunday',
 // ];
 
+export const initialAvailability = {
+	mon: [],
+	tue: [],
+	wed: [],
+	thu: [],
+	fri: [],
+	sat: [],
+	sun: [],
+};
+
 export const WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
 export const GRID_CHUNKS = Array(24 * 1)
