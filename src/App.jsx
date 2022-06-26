@@ -19,6 +19,7 @@ function App() {
 	let gridRef;
 	const [availability, setAvailability] = createSignal(initialAvailability);
 	const [gesture, setGesture] = createSignal('idle');
+	const [selectedItem, setSelectedItem] = createSignal(null); // {slot, day}
 
 	const timeslots = day => availability()[day];
 	const getTimeslot = (day, id) => availability()[day].find(s => s.id === id);
@@ -42,12 +43,14 @@ function App() {
 			end: slotEnd,
 		};
 
-		const hitSomething = timeslots(day).find(
+		const slotClicked = timeslots(day).find(
 			slot => clickTime >= slot.start && clickTime <= slot.end
 		);
 
-		if (hitSomething) {
-			console.log({ hitSomething });
+		if (slotClicked) {
+			console.log({ slotClicked });
+			setGesture('drag:ready');
+			setSelectedItem({ slot: slotClicked, day });
 			return;
 		}
 
@@ -59,9 +62,32 @@ function App() {
 		});
 	}
 
-	function handlePointerUp(e) {}
+	function handlePointerMove(e) {
+		if (gesture() === 'drag:ready') {
+			setGesture('drag:active');
+		}
 
-	function handlePointerMove(e) {}
+		if (gesture() === 'drag:active') {
+			const { slot: oldSlot, day } = selectedItem();
+			const { id, start, end } = oldSlot;
+			const newSlot = {
+				id,
+				start: start + e.movementY * 1.5,
+				end: end + e.movementY * 1.5,
+			};
+			setSelectedItem({ slot, day });
+
+			setAvailability({
+				...availability(),
+				[day]: [...timeslots(day).filter(s => s.id !== id), newSlot],
+			});
+		}
+	}
+
+	function handlePointerUp(e) {
+		setGesture('idle');
+		setSelectedItem(null);
+	}
 
 	onMount(() => {
 		document.addEventListener('pointerup', handlePointerUp);
@@ -72,7 +98,7 @@ function App() {
 		document.removeEventListener('pointermove', handlePointerMove);
 	});
 
-	createEffect(() => console.log(availability()));
+	// createEffect(() => console.log(availability()));
 
 	return (
 		<div class={s.App}>
