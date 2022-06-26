@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal, onMount } from 'solid-js';
 import s from './App.module.css';
 import AppHeader from './components/AppHeader';
 import DayColumn from './components/DayColumn';
@@ -9,13 +9,11 @@ import { initialAvailability, WEEKDAYS } from './lib/constants';
 import { findOverlappingSlots, getMergedTimeslots } from './lib/helpers';
 
 function App() {
-	const [availability, setAvailability] = createSignal(initialAvailability, {
-		equals: false,
-	});
+	const [availability, setAvailability] = createSignal(initialAvailability);
+	// const [changingSlot, setChangingSlot] = createSignal(null);
 
 	function handleColumnClick(slot, day) {
 		// console.log(slot, day, availability()[day]);
-
 		const merged = getMergedTimeslots(slot, availability()[day]);
 
 		setAvailability({
@@ -24,7 +22,34 @@ function App() {
 		});
 	}
 
+	function handlePointerUp(e) {
+		console.log('handlePointerUP', e);
+		// setChangingSlot(null);
+	}
+	function handleSlotDrag(e, slot, day) {
+		// 	if (changingSlot() === null) {
+		// 		setChangingSlot(availability()[day].find(s => s.id === slotId));
+		// 		// console.log('handleSlotDrag', e, slot, changingSlot());
+		// 	}
+
+		// 	const updatedSlot = {
+		// 		id: slotId,
+		// 		start: changingSlot().start + e.movementY,
+		// 		end: changingSlot().end + e.movementY,
+		// 	};
+
+		setAvailability(columns => ({
+			...columns,
+			[day]: [...columns[day].filter(s => s.id !== slot.id), slot],
+		}));
+	}
+
 	createEffect(() => console.log(availability()));
+	// createEffect(() => console.log('changingSlot', changingSlot()));
+
+	onMount(() => {
+		document.addEventListener('pointerup', handlePointerUp);
+	});
 
 	return (
 		<div class={s.App}>
@@ -42,6 +67,7 @@ function App() {
 								day={day}
 								onColumnClick={handleColumnClick}
 								timeslots={availability()[day]}
+								isDragging={handleSlotDrag}
 							/>
 						)}
 					</For>
