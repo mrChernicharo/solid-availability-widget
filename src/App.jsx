@@ -63,6 +63,8 @@ function App() {
 	}
 
 	function handlePointerMove(e) {
+		if (gesture() === 'idle') return;
+
 		if (gesture() === 'drag:ready') {
 			setGesture('drag:active');
 		}
@@ -71,10 +73,26 @@ function App() {
 			const { id, day } = selectedItem();
 			const oldSlot = getSlot(day, id);
 
+			let [slotStart, slotEnd] = [
+				oldSlot.start + e.movementY * 1.5,
+				oldSlot.end + e.movementY * 1.5,
+			];
+
+			if (slotStart < 0) {
+				return;
+				// slotStart = 0;
+				// slotEnd = oldSlot.end;
+			}
+			if (slotEnd > 1440) {
+				return;
+				// slotEnd = 1440;
+				// slotStart = oldSlot.start;
+			}
+
 			const newSlot = {
 				id,
-				start: oldSlot.start + e.movementY * 1.5,
-				end: oldSlot.end + e.movementY * 1.5,
+				start: slotStart,
+				end: slotEnd,
 			};
 
 			setAvailability({
@@ -85,6 +103,17 @@ function App() {
 	}
 
 	function handlePointerUp(e) {
+		if (selectedItem()) {
+			const { id, day } = selectedItem();
+			const slot = getSlot(day, id);
+			const merged = getMergedTimeslots(slot, timeslots(day));
+
+			setAvailability({
+				...availability(),
+				[day]: [...merged],
+			});
+		}
+
 		setGesture('idle');
 		setSelectedItem(null);
 	}
