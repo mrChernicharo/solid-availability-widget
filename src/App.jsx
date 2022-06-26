@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onMount } from 'solid-js';
+import { createEffect, createSignal, onCleanup, onMount } from 'solid-js';
 import s from './App.module.css';
 import AppHeader from './components/AppHeader';
 import DayColumn from './components/DayColumn';
@@ -6,10 +6,12 @@ import OuterGrid from './components/OuterGrid';
 import SideBar from './components/SideBar';
 import TopBar from './components/TopBar';
 import { initialAvailability, WEEKDAYS } from './lib/constants';
-import { findOverlappingSlots, getMergedTimeslots } from './lib/helpers';
+import { getMergedTimeslots } from './lib/helpers';
 
 function App() {
 	const [availability, setAvailability] = createSignal(initialAvailability);
+	const [currDragId, setCurrDragId] = createSignal(null);
+	const [currDragDay, setCurrDragDay] = createSignal(null);
 
 	function handleColumnClick(slot, day) {
 		const merged = getMergedTimeslots(slot, availability()[day]);
@@ -21,21 +23,42 @@ function App() {
 	}
 
 	function handlePointerUp(e) {
-		console.log('handlePointerUP', e);
+		const day = currDragDay();
+
+		if (availability()[day]?.length > 0) {
+			const currSlot = availability()[day].find(
+				item => item.id === currDragId()
+			);
+
+			const merged = getMergedTimeslots(currSlot, availability()[day]);
+
+			setAvailability({ ...availability(), [day]: merged });
+		}
+
+		setCurrDragId(null);
+		setCurrDragDay(null);
 	}
+
 	function handleSlotDrag(e, slot, day) {
-		console.log(e);
+		if (currDragId() === null) {
+			setCurrDragId(slot.id);
+			setCurrDragDay(day);
+		}
+
 		setAvailability(columns => ({
 			...columns,
 			[day]: [...columns[day].filter(s => s.id !== slot.id), slot],
 		}));
 	}
 
-	createEffect(() => console.log(availability()));
-
 	onMount(() => {
 		document.addEventListener('pointerup', handlePointerUp);
 	});
+	onCleanup(() => {
+		document.removeEventListener('pointerup', handlePointerUp);
+	});
+
+	createEffect(() => console.log({ currDragId: currDragId() }));
 
 	return (
 		<div class={s.App}>
@@ -60,7 +83,9 @@ function App() {
 				</div>
 			</OuterGrid>
 
-			<pre>{JSON.stringify(availability(), null, 2)}</pre>
+			<pre class={s.DataPeek}>
+				{JSON.stringify(availability(), null, 2)}
+			</pre>
 		</div>
 	);
 }

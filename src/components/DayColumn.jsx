@@ -24,7 +24,7 @@ function DayColumn(props) {
 		if (slotStart < 30) [slotStart, slotEnd] = [0, 60];
 		if (slotEnd > 1440) [slotStart, slotEnd] = [1380, 1440];
 
-		// snap them to 15min
+		// snap them to 15min ?
 		// [slotStart, slotEnd] =
 
 		const slot = {
