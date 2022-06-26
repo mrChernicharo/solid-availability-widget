@@ -6,6 +6,10 @@
 	text-align: center;
 }
 
+.Header {
+	user-select: none;
+}
+
 .OuterGrid {
 	border: 1px solid;
 	width: min(100vw, 800px);
@@ -25,10 +29,12 @@
 }
 
 .TopBar > div {
+	user-select: none;
 	border-left: 1px solid;
 }
 
 .SideBar {
+	user-select: none;
 	grid-column: 1 / 2;
 	/* border: 1px solid; */
 }
@@ -47,6 +53,7 @@
 }
 
 .Timeslot {
+	user-select: none;
 	background-color: dodgerblue;
 	position: absolute;
 }

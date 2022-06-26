@@ -10,10 +10,8 @@ import { findOverlappingSlots, getMergedTimeslots } from './lib/helpers';
 
 function App() {
 	const [availability, setAvailability] = createSignal(initialAvailability);
-	// const [changingSlot, setChangingSlot] = createSignal(null);
 
 	function handleColumnClick(slot, day) {
-		// console.log(slot, day, availability()[day]);
 		const merged = getMergedTimeslots(slot, availability()[day]);
 
 		setAvailability({
@@ -24,20 +22,9 @@ function App() {
 
 	function handlePointerUp(e) {
 		console.log('handlePointerUP', e);
-		// setChangingSlot(null);
 	}
 	function handleSlotDrag(e, slot, day) {
-		// 	if (changingSlot() === null) {
-		// 		setChangingSlot(availability()[day].find(s => s.id === slotId));
-		// 		// console.log('handleSlotDrag', e, slot, changingSlot());
-		// 	}
-
-		// 	const updatedSlot = {
-		// 		id: slotId,
-		// 		start: changingSlot().start + e.movementY,
-		// 		end: changingSlot().end + e.movementY,
-		// 	};
-
+		console.log(e);
 		setAvailability(columns => ({
 			...columns,
 			[day]: [...columns[day].filter(s => s.id !== slot.id), slot],
@@ -45,7 +32,6 @@ function App() {
 	}
 
 	createEffect(() => console.log(availability()));
-	// createEffect(() => console.log('changingSlot', changingSlot()));
 
 	onMount(() => {
 		document.addEventListener('pointerup', handlePointerUp);

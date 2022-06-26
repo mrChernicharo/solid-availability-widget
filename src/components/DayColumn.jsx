@@ -41,11 +41,24 @@ function DayColumn(props) {
 			console.log('isDragging');
 
 			const slot = props.timeslots.find(s => s.id === slotId());
+			const { height } = document
+				.querySelector(`#${slot.id}`)
+				.getBoundingClientRect();
+
+			let [newStart, newEnd] = [
+				slot.start + e.movementY * 1.5,
+				slot.end + e.movementY * 1.5,
+			];
+
+			if (newStart <= 0) newStart = 0;
+			if (newStart >= 1440 - height) newStart = 1440 - height;
+			if (newEnd <= height) newEnd = height;
+			if (newEnd >= 1440) newEnd = 1440;
 
 			const updatedSlot = {
 				id: slot.id,
-				start: slot.start + e.movementY,
-				end: slot.end + e.movementY,
+				start: newStart,
+				end: newEnd,
 			};
 
 			props.isDragging(e, updatedSlot, props.day);
@@ -64,6 +77,7 @@ function DayColumn(props) {
 			<For each={props.timeslots}>
 				{slot => (
 					<div
+						id={slot.id}
 						class={s.Timeslot}
 						onpointerenter={e => setSlotId(slot.id)}
 						// onpointerleave={e => setSlotId(null)}
