@@ -7,7 +7,7 @@ export function pxToTime(yVariation, columnHeight) {
 }
 
 export function timeToYPos(startTime, columnHeight) {
-	console.log({ startTime, columnHeight });
+	// console.log({ startTime, columnHeight });
 	const pxPerMinute = columnHeight / 1440;
 	const yPos = startTime * pxPerMinute;
 

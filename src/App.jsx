@@ -86,13 +86,11 @@ function App() {
 				<div ref={gridRef} class={s.InnerGrid}>
 					<For each={WEEKDAYS}>
 						{day => (
-							<div class={s.DayColumn}>
-								<DayColumn
-									day={day}
-									timeslots={timeslots(day)}
-									onpointerdown={e => handleClick(e, day)}
-								/>
-							</div>
+							<DayColumn
+								day={day}
+								timeslots={timeslots(day)}
+								onpointerdown={e => handleClick(e, day)}
+							/>
 						)}
 					</For>
 				</div>

@@ -28,7 +28,7 @@ function DayColumn(props) {
 		>
 			<For each={props.timeslots}>
 				{slot => {
-					console.log({ slot, top: top(slot), height: height(slot) });
+					// console.log({ slot, top: top(slot), height: height(slot) });
 					return (
 						<div
 							id={slot.id}

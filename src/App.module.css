@@ -54,9 +54,11 @@
 }
 
 .Timeslot {
-	user-select: none;
-	background-color: dodgerblue;
 	position: absolute;
+	user-select: none;
+
+	font-size: small;
+	background-color: dodgerblue;
 }
 
 .DataPeek {
