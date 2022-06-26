@@ -50,6 +50,7 @@
 .DayColumn {
 	border-inline: 1px solid;
 	position: relative;
+	height: 100%;
 }
 
 .Timeslot {

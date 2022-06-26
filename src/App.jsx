@@ -6,15 +6,52 @@ import OuterGrid from './components/OuterGrid';
 import SideBar from './components/SideBar';
 import TopBar from './components/TopBar';
 import { initialAvailability, WEEKDAYS } from './lib/constants';
-import { getMergedTimeslots } from './lib/helpers';
+import {
+	getElementRect,
+	getFormatedTimeFromSlot,
+	getMergedTimeslots,
+	idMaker,
+	timeToYPos,
+	yPosToTime,
+} from './lib/helpers';
 
 function App() {
+	let gridRef;
 	const [availability, setAvailability] = createSignal(initialAvailability);
-	const [currDragId, setCurrDragId] = createSignal(null);
-	const [currDragDay, setCurrDragDay] = createSignal(null);
+	const [gesture, setGesture] = createSignal('idle');
 
-	function handleColumnClick(slot, day) {
-		const merged = getMergedTimeslots(slot, availability()[day]);
+	const timeslots = day => availability()[day];
+	const getTimeslot = (day, id) => availability()[day].find(s => s.id === id);
+	// const columnAttr = attr => getElementRect(gridRef)[attr];
+
+	function handleClick(e, day) {
+		const { top, height } = getElementRect(gridRef);
+
+		const clickTime = yPosToTime(e.clientY, height, top);
+
+		let [slotStart, slotEnd] = [clickTime - 30, clickTime + 30];
+		if (slotStart < 30) [slotStart, slotEnd] = [0, 60];
+		if (slotEnd > 1440) [slotStart, slotEnd] = [1380, 1440];
+
+		// snap them to 15min ?
+		// [slotStart, slotEnd] =
+
+		const slot = {
+			id: idMaker(),
+			start: slotStart,
+			end: slotEnd,
+		};
+
+		const hitSomething = timeslots(day).find(
+			slot => clickTime >= slot.start && clickTime <= slot.end
+		);
+
+		if (hitSomething) {
+			console.log({ hitSomething });
+			return;
+		}
+
+		const merged = getMergedTimeslots(slot, timeslots(day));
 
 		setAvailability({
 			...availability(),
@@ -22,43 +59,20 @@ function App() {
 		});
 	}
 
-	function handlePointerUp(e) {
-		const day = currDragDay();
+	function handlePointerUp(e) {}
 
-		if (availability()[day]?.length > 0) {
-			const currSlot = availability()[day].find(
-				item => item.id === currDragId()
-			);
-
-			const merged = getMergedTimeslots(currSlot, availability()[day]);
-
-			setAvailability({ ...availability(), [day]: merged });
-		}
-
-		setCurrDragId(null);
-		setCurrDragDay(null);
-	}
-
-	function handleSlotDrag(e, slot, day) {
-		if (currDragId() === null) {
-			setCurrDragId(slot.id);
-			setCurrDragDay(day);
-		}
-
-		setAvailability(columns => ({
-			...columns,
-			[day]: [...columns[day].filter(s => s.id !== slot.id), slot],
-		}));
-	}
+	function handlePointerMove(e) {}
 
 	onMount(() => {
 		document.addEventListener('pointerup', handlePointerUp);
+		document.addEventListener('pointermove', handlePointerMove);
 	});
 	onCleanup(() => {
 		document.removeEventListener('pointerup', handlePointerUp);
+		document.removeEventListener('pointermove', handlePointerMove);
 	});
 
-	createEffect(() => console.log({ currDragId: currDragId() }));
+	createEffect(() => console.log(availability()));
 
 	return (
 		<div class={s.App}>
@@ -69,15 +83,16 @@ function App() {
 
 				<SideBar />
 
-				<div class={s.InnerGrid}>
+				<div ref={gridRef} class={s.InnerGrid}>
 					<For each={WEEKDAYS}>
 						{day => (
-							<DayColumn
-								day={day}
-								onColumnClick={handleColumnClick}
-								timeslots={availability()[day]}
-								isDragging={handleSlotDrag}
-							/>
+							<div class={s.DayColumn}>
+								<DayColumn
+									day={day}
+									timeslots={timeslots(day)}
+									onpointerdown={e => handleClick(e, day)}
+								/>
+							</div>
 						)}
 					</For>
 				</div>
