@@ -47,6 +47,8 @@ function App() {
 					</For>
 				</div>
 			</OuterGrid>
+
+			<pre>{JSON.stringify(availability(), null, 2)}</pre>
 		</div>
 	);
 }

@@ -26,8 +26,8 @@ export function yPosToTime(yPos, columnHeight, columnTop) {
 }
 
 export function dayToLeftPos(day, containerWidth) {
-	console.log(day, containerWidth);
-	const columnW = containerWidth / 8; // time col + 7 days
+	console.log('dayToLeftPos', day, containerWidth);
+	const columnW = containerWidth / 7;
 	const colIdx = WEEKDAYS.findIndex(d => d === day) + 1;
 	const leftPos = columnW * colIdx;
 	return leftPos;
@@ -56,25 +56,24 @@ export function mergeTimeslots(timeSlots, overlappingIds) {
 		overlappingIds.includes(item.id)
 	);
 
+	console.log('before merge', overlapping);
+
 	const mergedSlot = overlapping.reduce(
 		(acc, next) => {
-			acc = {
-				id: idMaker(),
-				start: Math.min(acc.start, next.start),
-				end: Math.max(acc.end, next.end),
-			};
+			(acc.start = Math.min(acc.start, next.start)),
+				(acc.end = Math.max(acc.end, next.end));
+
 			return acc;
 		},
 		{
-			id: '',
 			start: overlapping[0].start,
 			end: overlapping[0].end,
 		}
 	);
 
-	// console.log('mergedSlot', mergedSlot);
+	console.log('mergedSlot', mergedSlot);
 
-	return mergedSlot;
+	return { id: idMaker(), ...mergedSlot };
 }
 
 export function findOverlappingSlots(timeSlot, timeSlots) {
@@ -91,11 +90,11 @@ export function findOverlappingSlots(timeSlot, timeSlots) {
 			(start <= s.start && start <= s.end && end >= s.start && end >= s.end) // encompass
 	);
 
-	console.log('findOverlappingSlots', {
-		timeSlot,
-		timeSlots,
-		overlappingItems,
-	});
+	// console.log('findOverlappingSlots', {
+	// 	timeSlot,
+	// 	timeSlots,
+	// 	overlappingItems,
+	// });
 
 	return overlappingItems;
 }
@@ -103,18 +102,15 @@ export function findOverlappingSlots(timeSlot, timeSlots) {
 export function getMergedTimeslots(newTimeSlot, newTimeslots) {
 	const overlappingItems = findOverlappingSlots(newTimeSlot, newTimeslots);
 
-	// console.log('getMergedTimeslots', {
-	// 	newTimeSlot,
-	// 	newTimeslots,
-	// 	overlappingItems,
-	// });
-
 	if (overlappingItems.length > 0) {
 		const overlappingIds = overlappingItems
 			.map(item => item.id)
 			.concat(newTimeSlot.id);
 
-		const mergedSlot = mergeTimeslots(newTimeslots, overlappingIds);
+		const mergedSlot = mergeTimeslots(
+			[...newTimeslots, newTimeSlot],
+			overlappingIds
+		);
 
 		const filteredSlots = newTimeslots.filter(
 			item => !overlappingIds.includes(item.id)
@@ -122,13 +118,8 @@ export function getMergedTimeslots(newTimeSlot, newTimeslots) {
 
 		const mergedSlots = [...filteredSlots, mergedSlot];
 
-		// console.log({ mergedSlots });
 		return mergedSlots;
-
-		// callback(mergedSlots);
 	} else {
-		// callback(newTimeslots);
-		// console.log({ newTimeslots });
 		return [...newTimeslots, newTimeSlot];
 	}
 }

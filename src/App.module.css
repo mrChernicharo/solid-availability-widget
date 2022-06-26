@@ -43,4 +43,10 @@
 
 .DayColumn {
 	border-inline: 1px solid;
+	position: relative;
+}
+
+.Timeslot {
+	background-color: dodgerblue;
+	position: absolute;
 }

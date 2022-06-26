@@ -1,14 +1,18 @@
-import { For } from 'solid-js';
+import { createEffect, For } from 'solid-js';
 import s from '../App.module.css';
 import {
+	dayToLeftPos,
 	getElementRect,
 	getFormatedTimeFromSlot,
 	idMaker,
+	timeToYPos,
 	yPosToTime,
 } from '../lib/helpers';
 
 function DayColumn(props) {
 	let columnRef;
+
+	const columnRect = () => getElementRect(columnRef);
 	// console.log({ timeslots, day });
 
 	function handleClick(e) {
@@ -30,6 +34,8 @@ function DayColumn(props) {
 		props.onColumnClick(slot, props.day);
 	}
 
+	createEffect(() => console.log(columnRef));
+
 	return (
 		<div
 			ref={columnRef}
@@ -37,9 +43,37 @@ function DayColumn(props) {
 			class={s.DayColumn}
 			onclick={handleClick}
 		>
-			sd
 			<For each={props.timeslots}>
-				{slot => <div>{getFormatedTimeFromSlot(slot)}</div>}
+				{slot => (
+					<div
+						class={s.Timeslot}
+						style={{
+							width: getElementRect(columnRef).width + 'px',
+							// left:
+							// 	dayToLeftPos(
+							// 		props.day,
+							// 		getElementRect(columnRef).width
+							// 	) + 'px',
+							top:
+								timeToYPos(
+									slot.start,
+									getElementRect(columnRef).height
+								) + 'px',
+							height:
+								timeToYPos(
+									slot.end,
+									getElementRect(columnRef).height
+								) -
+								timeToYPos(
+									slot.start,
+									getElementRect(columnRef).height
+								) +
+								'px',
+						}}
+					>
+						{getFormatedTimeFromSlot(slot)}
+					</div>
+				)}
 			</For>
 		</div>
 	);
