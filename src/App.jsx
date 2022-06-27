@@ -2,6 +2,7 @@ import { createEffect, createSignal, onCleanup, onMount } from 'solid-js';
 import s from './App.module.css';
 import AppHeader from './components/AppHeader';
 import DayColumn from './components/DayColumn';
+import EditModal from './components/EditModal';
 import OuterGrid from './components/OuterGrid';
 import SideBar from './components/SideBar';
 import TopBar from './components/TopBar';
@@ -273,26 +274,10 @@ function App() {
 			</pre>
 
 			<Show when={isEditMode()}>
-				<div class={s.EditModal}>
-					<button onclick={e => setIsEditMode(false)}>X</button>
-
-					<div>
-						{JSON.stringify(
-							{
-								id: lastSelectedItem.id,
-								day: lastSelectedItem.day,
-								time: getFormatedTimeFromSlot(
-									getSlot(
-										lastSelectedItem.day,
-										lastSelectedItem.id
-									)
-								),
-							},
-							null,
-							2
-						)}
-					</div>
-				</div>
+				<EditModal
+					slot={getSlot(lastSelectedItem.day, lastSelectedItem.id)}
+					onModalClose={e => setIsEditMode(false)}
+				/>
 			</Show>
 		</div>
 	);

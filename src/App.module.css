@@ -92,13 +92,22 @@
 .EditModal {
 	width: 300px;
 	height: 300px;
-	position: absolute;
+	position: fixed;
 	bottom: 0;
 	left: 50%;
 	transform: translateX(-50%);
 	margin: auto;
 	background: #666;
 	z-index: 2;
+}
+
+.Overlay {
+	position: fixed;
+	width: 1000px;
+	height: 1000px;
+	background: #224;
+	opacity: 0.2;
+	top: 0;
 }
 
 .DataPeek {
