@@ -19,11 +19,12 @@ function App() {
 	let gridRef;
 	const [availability, setAvailability] = createSignal(initialAvailability);
 	const [gesture, setGesture] = createSignal('idle');
-	const [selectedItem, setSelectedItem] = createSignal(null); // {slot, day}
+	const [selectedItem, setSelectedItem] = createSignal(null); // {slotId, day}
+	const [cursor, setCursor] = createSignal('default');
+	const [isEditMode, setIsEditMode] = createSignal(false);
 
 	const timeslots = day => availability()[day];
 	const getSlot = (day, id) => availability()[day].find(s => s.id === id);
-	// const columnAttr = attr => getElementRect(gridRef)[attr];
 
 	function handleClick(e, day) {
 		// leftclick only
@@ -66,7 +67,10 @@ function App() {
 	}
 
 	function handlePointerMove(e) {
-		if (gesture() === 'idle') return;
+		if (gesture() === 'idle') {
+			setCursor('default');
+			return;
+		}
 
 		// WHAT AREA ARE WE DRAGGING?
 		if (gesture() === 'drag:ready') {
@@ -94,6 +98,7 @@ function App() {
 
 		if (gesture() === 'drag:active') {
 			console.log('DRAG');
+			setCursor('move');
 
 			let [slotStart, slotEnd] = [
 				oldSlot.start + e.movementY * 1.5,
@@ -118,9 +123,9 @@ function App() {
 				[day]: [...timeslots(day).filter(s => s.id !== id), newSlot],
 			});
 		}
-
 		if (gesture() === 'resize:top:active') {
 			console.log('TOP RESIZE');
+			setCursor('row-resize');
 
 			let [slotStart, slotEnd] = [
 				oldSlot.start + e.movementY * 1.5,
@@ -150,6 +155,7 @@ function App() {
 		}
 		if (gesture() === 'resize:bottom:active') {
 			console.log('BOTTOM RESIZE');
+			setCursor('row-resize');
 
 			let [slotStart, slotEnd] = [
 				oldSlot.start,
@@ -180,7 +186,13 @@ function App() {
 	}
 
 	function handlePointerUp(e) {
+		console.log('handlePointerUp', selectedItem(), gesture());
 		if (selectedItem()) {
+			// clicked simply (no drag)
+			if (gesture() === 'drag:ready') {
+				setIsEditMode(true);
+			}
+
 			const { id, day } = selectedItem();
 			const slot = getSlot(day, id);
 			const merged = getMergedTimeslots(slot, timeslots(day));
@@ -194,6 +206,13 @@ function App() {
 		setGesture('idle');
 		setSelectedItem(null);
 	}
+
+	createEffect(() => {
+		document.body.style.cursor = cursor();
+	});
+	createEffect(() => {
+		console.log(isEditMode());
+	});
 
 	onMount(() => {
 		document.addEventListener('pointerup', handlePointerUp);
@@ -231,6 +250,12 @@ function App() {
 			<pre class={s.DataPeek}>
 				{JSON.stringify(availability(), null, 2)}
 			</pre>
+
+			<Show when={isEditMode()}>
+				<div class={s.EditModal}>
+					<button onclick={e => setIsEditMode(false)}>X</button>
+				</div>
+			</Show>
 		</div>
 	);
 }
