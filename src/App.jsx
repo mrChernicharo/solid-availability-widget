@@ -101,8 +101,8 @@ function App() {
 			setCursor('move');
 
 			let [slotStart, slotEnd] = [
-				oldSlot.start + e.movementY * 1.5,
-				oldSlot.end + e.movementY * 1.5,
+				oldSlot.start + e.movementY * 1.95,
+				oldSlot.end + e.movementY * 1.95,
 			];
 
 			if (slotStart < 0) {
@@ -128,7 +128,7 @@ function App() {
 			setCursor('row-resize');
 
 			let [slotStart, slotEnd] = [
-				oldSlot.start + e.movementY * 1.5,
+				oldSlot.start + e.movementY * 1.95,
 				oldSlot.end,
 			];
 
@@ -159,7 +159,7 @@ function App() {
 
 			let [slotStart, slotEnd] = [
 				oldSlot.start,
-				oldSlot.end + e.movementY * 1.5,
+				oldSlot.end + e.movementY * 1.95,
 			];
 
 			// REACHED BOTTOM!!!
@@ -249,7 +249,11 @@ function App() {
 
 				<SideBar />
 
-				<div ref={gridRef} class={s.InnerGrid}>
+				<div
+					id="outer-grid-987asd123qwe"
+					ref={gridRef}
+					class={s.InnerGrid}
+				>
 					<For each={WEEKDAYS}>
 						{day => (
 							<DayColumn
@@ -269,6 +273,8 @@ function App() {
 			<Show when={isEditMode()}>
 				<div class={s.EditModal}>
 					<button onclick={e => setIsEditMode(false)}>X</button>
+
+					<div>{JSON.stringify(selectedItem())}</div>
 				</div>
 			</Show>
 		</div>

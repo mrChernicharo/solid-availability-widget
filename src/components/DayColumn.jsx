@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onMount, For } from 'solid-js';
+import { createEffect, createSignal, onMount, For, onCleanup } from 'solid-js';
 import s from '../App.module.css';
 import {
 	getElementRect,
@@ -10,6 +10,8 @@ import {
 
 function DayColumn(props) {
 	let columnRef;
+	const [screenWidth, setScreenWidth] = createSignal(0);
+	const [width, setWidth] = createSignal(0);
 
 	const rect = () => getElementRect(columnRef);
 	const top = slot => timeToYPos(slot.start, rect().height) + 'px';
@@ -18,11 +20,25 @@ function DayColumn(props) {
 		timeToYPos(slot.start, rect().height) +
 		'px';
 
-	createEffect(() => {
-		// console.log(columnRef);
-		// console.log(rect());
-		// console.log(props.timeslots);
+	function handleScreenResize(e) {
+		setScreenWidth(window.innerWidth);
+
+		setWidth(
+			getElementRect(document.querySelector('#outer-grid-987asd123qwe'))
+				.width / 7
+		);
+	}
+
+	onMount(() => {
+		window.addEventListener('resize', handleScreenResize);
 	});
+
+	onCleanup(() => {
+		window.removeEventListener('resize', handleScreenResize);
+	});
+
+	createEffect(() => handleScreenResize());
+
 	return (
 		<div
 			id={props.day}
@@ -38,7 +54,10 @@ function DayColumn(props) {
 							id={slot.id}
 							class={s.Timeslot}
 							style={{
-								width: rect().width + 'px',
+								// width: rect().width * 0.8 + 'px',
+								// width: rect().width + 'px',
+								width: width() + 'px',
+								// left: rect().width * 0.095 + 'px',
 								top: top(slot),
 								height: height(slot),
 							}}
