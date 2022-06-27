@@ -17,6 +17,7 @@ import {
 
 function App() {
 	let gridRef;
+	let lastSelectedItem;
 	const [availability, setAvailability] = createSignal(initialAvailability);
 	const [gesture, setGesture] = createSignal('idle');
 	const [selectedItem, setSelectedItem] = createSignal(null); // {slotId, day}
@@ -55,6 +56,7 @@ function App() {
 			console.log({ slotClicked });
 			setGesture('drag:ready');
 			setSelectedItem({ id: slotClicked.id, day });
+			lastSelectedItem = selectedItem();
 			return;
 		}
 
@@ -274,7 +276,22 @@ function App() {
 				<div class={s.EditModal}>
 					<button onclick={e => setIsEditMode(false)}>X</button>
 
-					<div>{JSON.stringify(selectedItem())}</div>
+					<div>
+						{JSON.stringify(
+							{
+								id: lastSelectedItem.id,
+								day: lastSelectedItem.day,
+								time: getFormatedTimeFromSlot(
+									getSlot(
+										lastSelectedItem.day,
+										lastSelectedItem.id
+									)
+								),
+							},
+							null,
+							2
+						)}
+					</div>
 				</div>
 			</Show>
 		</div>

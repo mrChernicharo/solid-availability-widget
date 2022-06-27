@@ -54,7 +54,8 @@ function DayColumn(props) {
 							id={slot.id}
 							class={s.Timeslot}
 							style={{
-								width: width() + 'px',
+								width: width() * 0.8 + 'px',
+								left: width() * 0.09 + 'px',
 								top: top(slot),
 								height: height(slot),
 							}}
