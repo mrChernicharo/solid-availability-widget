@@ -32,6 +32,8 @@ export const GRID_CHUNKS = Array(24 * 1)
 	.fill()
 	.map((_, i) => i * 60);
 
+console.log(GRID_CHUNKS);
+
 export const GRID_LINE_HEIGHTS = Array(48)
 	.fill(0)
 	.map((_, i) => i * 30);

@@ -7,7 +7,7 @@ function TopBar() {
 		<div class={s.TopBar}>
 			<div></div>
 
-			<For each={WEEKDAYS}>{day => <div>{day}</div>}</For>
+			<For each={WEEKDAYS}>{day => <div>{day.toUpperCase()}</div>}</For>
 		</div>
 	);
 }

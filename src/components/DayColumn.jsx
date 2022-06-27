@@ -54,16 +54,13 @@ function DayColumn(props) {
 							id={slot.id}
 							class={s.Timeslot}
 							style={{
-								// width: rect().width * 0.8 + 'px',
-								// width: rect().width + 'px',
 								width: width() + 'px',
-								// left: rect().width * 0.095 + 'px',
 								top: top(slot),
 								height: height(slot),
 							}}
 						>
 							<div class={`${s.Thumb} ${s.TopThumb}`}></div>
-							{/* {getFormatedTimeFromSlot(slot)} */}
+							{getFormatedTimeFromSlot(slot)}
 							<div class={`${s.Thumb} ${s.BottomThumb}`}></div>
 						</div>
 					);
