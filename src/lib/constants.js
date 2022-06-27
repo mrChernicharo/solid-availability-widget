@@ -17,11 +17,11 @@ export const ID_CHARS =
 // ];
 
 export const initialAvailability = {
-	mon: [],
-	tue: [],
-	wed: [],
-	thu: [],
-	fri: [],
+	mon: [{ id: 'asd', start: 9 * 60, end: 17 * 60 }],
+	tue: [{ id: 'asd3', start: 9 * 60, end: 17 * 60 }],
+	wed: [{ id: 'a1sd', start: 9 * 60, end: 17 * 60 }],
+	thu: [{ id: 'aesd', start: 9 * 60, end: 17 * 60 }],
+	fri: [{ id: 'aasd', start: 9 * 60, end: 17 * 60 }],
 	sat: [],
 	sun: [],
 };

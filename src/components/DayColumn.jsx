@@ -1,5 +1,6 @@
 import { createEffect, createSignal, onMount, For, onCleanup } from 'solid-js';
 import s from '../App.module.css';
+import { GRID_CHUNKS } from '../lib/constants';
 import {
 	getElementRect,
 	getFormatedTimeFromSlot,
@@ -55,7 +56,7 @@ function DayColumn(props) {
 							class={s.Timeslot}
 							style={{
 								width: width() * 0.8 + 'px',
-								left: width() * 0.09 + 'px',
+								left: width() * 0.1 + 'px',
 								top: top(slot),
 								height: height(slot),
 							}}
@@ -64,6 +65,20 @@ function DayColumn(props) {
 							{getFormatedTimeFromSlot(slot)}
 							<div class={`${s.Thumb} ${s.BottomThumb}`}></div>
 						</div>
+					);
+				}}
+			</For>
+
+			<For each={GRID_CHUNKS}>
+				{(line, i) => {
+					console.log({ line, i: i() });
+					return (
+						<div
+							class={s.GridLine}
+							style={{
+								top: 32 * i() + 'px',
+							}}
+						></div>
 					);
 				}}
 			</For>
