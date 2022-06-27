@@ -39,7 +39,9 @@ function DayColumn(props) {
 								height: height(slot),
 							}}
 						>
-							{getFormatedTimeFromSlot(slot)}
+							<div class={`${s.Thumb} ${s.TopThumb}`}></div>
+							{/* {getFormatedTimeFromSlot(slot)} */}
+							<div class={`${s.Thumb} ${s.BottomThumb}`}></div>
 						</div>
 					);
 				}}

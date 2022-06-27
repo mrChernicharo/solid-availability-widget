@@ -26,6 +26,9 @@ function App() {
 	// const columnAttr = attr => getElementRect(gridRef)[attr];
 
 	function handleClick(e, day) {
+		// leftclick only
+		if (e.buttons !== 1) return;
+
 		const { top, height } = getElementRect(gridRef);
 
 		const clickTime = yPosToTime(e.clientY, height, top);
@@ -65,13 +68,32 @@ function App() {
 	function handlePointerMove(e) {
 		if (gesture() === 'idle') return;
 
+		// WHAT AREA ARE WE DRAGGING?
 		if (gesture() === 'drag:ready') {
-			setGesture('drag:active');
+			const topThumbRegex = /_TopThumb_/g;
+			const bottomThumbRegex = /_BottomThumb_/g;
+
+			const isTopHandle = !!Array.from(e.srcElement.classList).find(c =>
+				c.match(topThumbRegex)
+			);
+			const iSBottomHandle = !!Array.from(e.srcElement.classList).find(
+				c => c.match(bottomThumbRegex)
+			);
+
+			if (isTopHandle) {
+				return setGesture('resize:top:active');
+			}
+			if (iSBottomHandle) {
+				return setGesture('resize:bottom:active');
+			}
+			return setGesture('drag:active');
 		}
 
+		const { id, day } = selectedItem();
+		const oldSlot = getSlot(day, id);
+
 		if (gesture() === 'drag:active') {
-			const { id, day } = selectedItem();
-			const oldSlot = getSlot(day, id);
+			console.log('DRAG');
 
 			let [slotStart, slotEnd] = [
 				oldSlot.start + e.movementY * 1.5,
@@ -80,13 +102,68 @@ function App() {
 
 			if (slotStart < 0) {
 				return;
-				// slotStart = 0;
-				// slotEnd = oldSlot.end;
 			}
 			if (slotEnd > 1440) {
 				return;
-				// slotEnd = 1440;
-				// slotStart = oldSlot.start;
+			}
+
+			const newSlot = {
+				id,
+				start: slotStart,
+				end: slotEnd,
+			};
+
+			setAvailability({
+				...availability(),
+				[day]: [...timeslots(day).filter(s => s.id !== id), newSlot],
+			});
+		}
+
+		if (gesture() === 'resize:top:active') {
+			console.log('TOP RESIZE');
+
+			let [slotStart, slotEnd] = [
+				oldSlot.start + e.movementY * 1.5,
+				oldSlot.end,
+			];
+
+			// REACHED TOP!!!
+			if (slotStart < 0) {
+				slotStart = 0;
+			}
+
+			// TOO SMALL!!!
+			if (slotEnd - slotStart < 30) {
+				return;
+			}
+
+			const newSlot = {
+				id,
+				start: slotStart,
+				end: slotEnd,
+			};
+
+			setAvailability({
+				...availability(),
+				[day]: [...timeslots(day).filter(s => s.id !== id), newSlot],
+			});
+		}
+		if (gesture() === 'resize:bottom:active') {
+			console.log('BOTTOM RESIZE');
+
+			let [slotStart, slotEnd] = [
+				oldSlot.start,
+				oldSlot.end + e.movementY * 1.5,
+			];
+
+			// REACHED BOTTOM!!!
+			if (slotEnd > 1440) {
+				slotEnd = 1440;
+			}
+
+			// TOO SMALL!!!
+			if (slotEnd - slotStart < 30) {
+				return;
 			}
 
 			const newSlot = {

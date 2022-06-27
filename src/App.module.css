@@ -56,10 +56,27 @@
 
 .Timeslot {
 	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
 	user-select: none;
 
 	font-size: small;
 	background-color: dodgerblue;
+}
+
+.Thumb {
+	width: 100%;
+	height: min(33%, 16px);
+	border: 1px solid red;
+	/* z-index: 10; */
+}
+
+/* DON'T REMOVE THIS CLASSES! */
+.TopThumb {
+}
+.BottomThumb {
 }
 
 .DataPeek {
