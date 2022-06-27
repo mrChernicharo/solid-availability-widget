@@ -4,7 +4,7 @@
 -   horizontal resizing ✅
 
 -   click / drop / (resize?) 15 min snap
--   timeslot details
+-   timeslot details [label, color]
 -   modal form
 -   dynamize colors
 -   light mode

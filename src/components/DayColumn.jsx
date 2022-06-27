@@ -76,7 +76,7 @@ function DayColumn(props) {
 						<div
 							class={s.GridLine}
 							style={{
-								top: 32 * i() + 'px',
+								top: (768 / 24) * i() + 'px',
 							}}
 						></div>
 					);
