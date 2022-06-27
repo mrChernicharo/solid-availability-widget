@@ -204,14 +204,29 @@ function App() {
 		}
 
 		setGesture('idle');
-		setSelectedItem(null);
+
+		if (selectedItem()?.id) {
+			const el = document.querySelector(`#${selectedItem().id}`);
+
+			if (el) {
+				el.classList.remove('dragging');
+				setSelectedItem(null);
+			}
+		}
 	}
 
 	createEffect(() => {
 		document.body.style.cursor = cursor();
 	});
 	createEffect(() => {
-		console.log(isEditMode());
+		if (selectedItem()?.id) {
+			timeslots(selectedItem().day);
+			const el = document.querySelector(`#${selectedItem().id}`);
+
+			if (el) {
+				el.classList.add('dragging');
+			}
+		}
 	});
 
 	onMount(() => {

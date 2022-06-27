@@ -27,7 +27,7 @@ export function yPosToTime(yPos, columnHeight, columnTop) {
 }
 
 export function dayToLeftPos(day, containerWidth) {
-	console.log('dayToLeftPos', day, containerWidth);
+	// console.log('dayToLeftPos', day, containerWidth);
 	const columnW = containerWidth / 7;
 	const colIdx = WEEKDAYS.findIndex(d => d === day) + 1;
 	const leftPos = columnW * colIdx;
@@ -57,7 +57,7 @@ export function mergeTimeslots(timeSlots, overlappingIds) {
 		overlappingIds.includes(item.id)
 	);
 
-	console.log('before merge', overlapping);
+	// console.log('before merge', overlapping);
 
 	const mergedSlot = overlapping.reduce(
 		(acc, next) => {
@@ -73,12 +73,13 @@ export function mergeTimeslots(timeSlots, overlappingIds) {
 		}
 	);
 
-	console.log('mergedSlot', mergedSlot);
+	// console.log('mergedSlot', mergedSlot);
 
 	return { ...mergedSlot };
 }
 
 export function findOverlappingSlots(timeSlot, timeSlots) {
+	// if (!timeSlot?.start || !timeSlot?.end) return;
 	const { start, end } = timeSlot;
 
 	// prettier-ignore
@@ -100,9 +101,11 @@ export function findOverlappingSlots(timeSlot, timeSlots) {
 }
 
 export function getMergedTimeslots(newTimeSlot, newTimeslots) {
+	if (!newTimeSlot) return newTimeslots;
+
 	const overlappingItems = findOverlappingSlots(newTimeSlot, newTimeslots);
 
-	if (overlappingItems.length > 0) {
+	if (overlappingItems?.length > 0) {
 		const overlappingIds = overlappingItems
 			.map(item => item.id)
 			.concat(newTimeSlot.id);

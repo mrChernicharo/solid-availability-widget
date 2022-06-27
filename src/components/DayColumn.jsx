@@ -19,7 +19,9 @@ function DayColumn(props) {
 		'px';
 
 	createEffect(() => {
-		console.log(columnRef);
+		// console.log(columnRef);
+		// console.log(rect());
+		// console.log(props.timeslots);
 	});
 	return (
 		<div
