@@ -67,6 +67,7 @@ export function mergeTimeslots(timeSlots, overlappingIds) {
 			return acc;
 		},
 		{
+			id: overlapping[0].id,
 			start: overlapping[0].start,
 			end: overlapping[0].end,
 		}
@@ -74,12 +75,10 @@ export function mergeTimeslots(timeSlots, overlappingIds) {
 
 	console.log('mergedSlot', mergedSlot);
 
-	return { id: idMaker(), ...mergedSlot };
+	return { ...mergedSlot };
 }
 
 export function findOverlappingSlots(timeSlot, timeSlots) {
-	// if (!timeSlot.start || !timeSlot.end) return;
-
 	const { start, end } = timeSlot;
 
 	// prettier-ignore

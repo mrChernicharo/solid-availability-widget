@@ -11,7 +11,6 @@ import {
 function DayColumn(props) {
 	let columnRef;
 
-	// const rect = () => getElementRect(document.querySelector(`#${props.day}`));
 	const rect = () => getElementRect(columnRef);
 	const top = slot => timeToYPos(slot.start, rect().height) + 'px';
 	const height = slot =>
@@ -19,12 +18,15 @@ function DayColumn(props) {
 		timeToYPos(slot.start, rect().height) +
 		'px';
 
+	createEffect(() => {
+		console.log(columnRef);
+	});
 	return (
 		<div
-			class={s.DayColumn}
 			id={props.day}
-			onpointerdown={props.onpointerdown}
 			ref={columnRef}
+			class={s.DayColumn}
+			onpointerdown={props.onpointerdown}
 		>
 			<For each={props.timeslots}>
 				{slot => {
