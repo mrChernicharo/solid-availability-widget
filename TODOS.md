@@ -3,7 +3,8 @@
 -   timeslot resize ✅
 -   horizontal resizing ✅
 
--   click / drop / (resize?) 15 min snap
+-   click 15 min snap ✅
+-   drop / resize snap
 -   timeslot details [label, color]
 -   modal form
 -   dynamize colors

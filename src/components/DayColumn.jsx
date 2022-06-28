@@ -71,7 +71,6 @@ function DayColumn(props) {
 
 			<For each={GRID_CHUNKS}>
 				{(line, i) => {
-					console.log({ line, i: i() });
 					return (
 						<div
 							class={s.GridLine}

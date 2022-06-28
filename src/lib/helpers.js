@@ -73,9 +73,13 @@ export function mergeTimeslots(timeSlots, overlappingIds) {
 		}
 	);
 
-	// console.log('mergedSlot', mergedSlot);
+	const snappedSlot = {
+		id: mergedSlot.id,
+		start: snap(mergedSlot.start),
+		end: snap(mergedSlot.end),
+	};
 
-	return { ...mergedSlot };
+	return snappedSlot;
 }
 
 export function findOverlappingSlots(timeSlot, timeSlots) {
@@ -126,6 +130,17 @@ export function getMergedTimeslots(newTimeSlot, newTimeslots) {
 		return [...newTimeslots, newTimeSlot];
 	}
 }
+
+export function snap(val) {
+	const snap = 15;
+	const mod = val % snap;
+
+	const roundUp = mod > Math.floor(snap);
+
+	return roundUp ? val + snap - mod : val - mod;
+}
+
+// export function snapTimeslot(val) {}
 
 // ************************************************  //
 

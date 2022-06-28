@@ -12,6 +12,7 @@ import {
 	getFormatedTimeFromSlot,
 	getMergedTimeslots,
 	idMaker,
+	snap,
 	timeToYPos,
 	yPosToTime,
 } from './lib/helpers';
@@ -45,8 +46,8 @@ function App() {
 
 		const slot = {
 			id: idMaker(),
-			start: slotStart,
-			end: slotEnd,
+			start: snap(slotStart),
+			end: snap(slotEnd),
 		};
 
 		const slotClicked = timeslots(day).find(
@@ -198,7 +199,13 @@ function App() {
 
 			const { id, day } = selectedItem();
 			const slot = getSlot(day, id);
+
 			const merged = getMergedTimeslots(slot, timeslots(day));
+
+			const el = document.querySelector(`#${selectedItem().id}`);
+
+			el.classList.remove('dragging');
+			setSelectedItem(null);
 
 			setAvailability({
 				...availability(),
@@ -207,15 +214,6 @@ function App() {
 		}
 
 		setGesture('idle');
-
-		if (selectedItem()?.id) {
-			const el = document.querySelector(`#${selectedItem().id}`);
-
-			if (el) {
-				el.classList.remove('dragging');
-				setSelectedItem(null);
-			}
-		}
 	}
 
 	createEffect(() => {
