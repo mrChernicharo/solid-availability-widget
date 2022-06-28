@@ -1,4 +1,5 @@
 import { createEffect, createSignal, onCleanup, onMount } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import s from './App.module.css';
 import AppHeader from './components/AppHeader';
 import DayColumn from './components/DayColumn';
@@ -9,28 +10,28 @@ import TopBar from './components/TopBar';
 import { initialAvailability, WEEKDAYS } from './lib/constants';
 import {
 	getElementRect,
-	getFormatedTimeFromSlot,
 	getMergedTimeslots,
 	idMaker,
 	snap,
-	timeToYPos,
 	yPosToTime,
 } from './lib/helpers';
+
+const [store, setStore] = createStore({
+	availability: initialAvailability,
+	gesture: 'idle',
+	selectedItem: null,
+	cursor: 'default',
+	isEditMode: false,
+});
 
 function App() {
 	let gridRef;
 	let lastSelectedItem;
-	const [availability, setAvailability] = createSignal(initialAvailability);
-	const [gesture, setGesture] = createSignal('idle');
-	const [selectedItem, setSelectedItem] = createSignal(null); // {slotId, day}
-	const [cursor, setCursor] = createSignal('default');
-	const [isEditMode, setIsEditMode] = createSignal(false);
 
-	const timeslots = day => availability()[day];
-	const getSlot = (day, id) => availability()[day].find(s => s.id === id);
+	const getSlot = (day, id) => store.availability[day].find(s => s.id === id);
 
 	function handleClick(e, day) {
-		// leftclick only
+		// LEFT CLICK ONLY!
 		if (e.buttons !== 1) return;
 
 		const { top, height } = getElementRect(gridRef);
@@ -41,43 +42,37 @@ function App() {
 		if (slotStart < 30) [slotStart, slotEnd] = [0, 60];
 		if (slotEnd > 1440) [slotStart, slotEnd] = [1380, 1440];
 
-		// snap them to 15min ?
-		// [slotStart, slotEnd] =
-
 		const slot = {
 			id: idMaker(),
 			start: snap(slotStart),
 			end: snap(slotEnd),
 		};
 
-		const slotClicked = timeslots(day).find(
+		const slotClicked = store.availability[day].find(
 			slot => clickTime >= slot.start && clickTime <= slot.end
 		);
 
 		if (slotClicked) {
 			console.log({ slotClicked });
-			setGesture('drag:ready');
-			setSelectedItem({ id: slotClicked.id, day });
-			lastSelectedItem = selectedItem();
+			setStore('gesture', 'drag:ready');
+			setStore('selectedItem', { id: slotClicked.id, day });
+			lastSelectedItem = store.selectedItem;
 			return;
 		}
 
-		const merged = getMergedTimeslots(slot, timeslots(day));
+		const merged = getMergedTimeslots(slot, store.availability[day]);
 
-		setAvailability({
-			...availability(),
-			[day]: [...merged],
-		});
+		setStore('availability', day, prev => [...merged]);
 	}
 
 	function handlePointerMove(e) {
-		if (gesture() === 'idle') {
-			setCursor('default');
+		if (store.gesture === 'idle') {
+			setStore('cursor', 'default');
 			return;
 		}
 
 		// WHAT AREA ARE WE DRAGGING?
-		if (gesture() === 'drag:ready') {
+		if (store.gesture === 'drag:ready') {
 			const topThumbRegex = /_TopThumb_/g;
 			const bottomThumbRegex = /_BottomThumb_/g;
 
@@ -89,20 +84,20 @@ function App() {
 			);
 
 			if (isTopHandle) {
-				return setGesture('resize:top:active');
+				return setStore('gesture', 'resize:top:active');
 			}
 			if (iSBottomHandle) {
-				return setGesture('resize:bottom:active');
+				return setStore('gesture', 'resize:bottom:active');
 			}
-			return setGesture('drag:active');
+			return setStore('gesture', 'drag:active');
 		}
 
-		const { id, day } = selectedItem();
+		const { id, day } = store.selectedItem;
 		const oldSlot = getSlot(day, id);
 
-		if (gesture() === 'drag:active') {
+		if (store.gesture === 'drag:active') {
 			console.log('DRAG');
-			setCursor('move');
+			setStore('cursor', 'move');
 
 			let [slotStart, slotEnd] = [
 				oldSlot.start + e.movementY * 1.95,
@@ -122,14 +117,14 @@ function App() {
 				end: slotEnd,
 			};
 
-			setAvailability({
-				...availability(),
-				[day]: [...timeslots(day).filter(s => s.id !== id), newSlot],
-			});
+			setStore('availability', day, prev => [
+				...prev.filter(s => s.id !== id),
+				newSlot,
+			]);
 		}
-		if (gesture() === 'resize:top:active') {
+		if (store.gesture === 'resize:top:active') {
 			console.log('TOP RESIZE');
-			setCursor('row-resize');
+			setStore('cursor', 'row-resize');
 
 			let [slotStart, slotEnd] = [
 				oldSlot.start + e.movementY * 1.95,
@@ -152,14 +147,14 @@ function App() {
 				end: slotEnd,
 			};
 
-			setAvailability({
-				...availability(),
-				[day]: [...timeslots(day).filter(s => s.id !== id), newSlot],
-			});
+			setStore('availability', day, prev => [
+				...prev.filter(s => s.id !== id),
+				newSlot,
+			]);
 		}
-		if (gesture() === 'resize:bottom:active') {
+		if (store.gesture === 'resize:bottom:active') {
 			console.log('BOTTOM RESIZE');
-			setCursor('row-resize');
+			setStore('cursor', 'row-resize');
 
 			let [slotStart, slotEnd] = [
 				oldSlot.start,
@@ -182,47 +177,43 @@ function App() {
 				end: slotEnd,
 			};
 
-			setAvailability({
-				...availability(),
-				[day]: [...timeslots(day).filter(s => s.id !== id), newSlot],
-			});
+			setStore('availability', day, prev => [
+				...prev.filter(s => s.id !== id),
+				newSlot,
+			]);
 		}
 	}
 
 	function handlePointerUp(e) {
-		console.log('handlePointerUp', selectedItem(), gesture());
-		if (selectedItem()) {
+		console.log('handlePointerUp', store.selectedItem, store.gesture);
+		if (store.selectedItem) {
 			// clicked simply (no drag)
-			if (gesture() === 'drag:ready') {
-				setIsEditMode(true);
+			if (store.gesture === 'drag:ready') {
+				setStore('isEditMode', true);
 			}
 
-			const { id, day } = selectedItem();
+			const { id, day } = store.selectedItem;
 			const slot = getSlot(day, id);
 
-			const merged = getMergedTimeslots(slot, timeslots(day));
+			const merged = getMergedTimeslots(slot, store.availability[day]);
 
-			const el = document.querySelector(`#${selectedItem().id}`);
+			const el = document.querySelector(`#${store.selectedItem.id}`);
 
 			el.classList.remove('dragging');
-			setSelectedItem(null);
+			setStore('selectedItem', null);
 
-			setAvailability({
-				...availability(),
-				[day]: [...merged],
-			});
+			setStore('availability', day, prev => [...merged]);
 		}
 
-		setGesture('idle');
+		setStore('gesture', 'idle');
 	}
 
 	createEffect(() => {
-		document.body.style.cursor = cursor();
+		document.body.style.cursor = store.cursor;
 	});
 	createEffect(() => {
-		if (selectedItem()?.id) {
-			timeslots(selectedItem().day);
-			const el = document.querySelector(`#${selectedItem().id}`);
+		if (store.selectedItem?.id) {
+			const el = document.querySelector(`#${store.selectedItem.id}`);
 
 			if (el) {
 				el.classList.add('dragging');
@@ -238,8 +229,6 @@ function App() {
 		document.removeEventListener('pointerup', handlePointerUp);
 		document.removeEventListener('pointermove', handlePointerMove);
 	});
-
-	// createEffect(() => console.log(availability()));
 
 	return (
 		<div class={s.App}>
@@ -259,7 +248,7 @@ function App() {
 						{day => (
 							<DayColumn
 								day={day}
-								timeslots={timeslots(day)}
+								timeslots={store.availability[day]}
 								onpointerdown={e => handleClick(e, day)}
 							/>
 						)}
@@ -268,14 +257,14 @@ function App() {
 			</OuterGrid>
 
 			<pre class={s.DataPeek}>
-				{JSON.stringify(availability(), null, 2)}
+				{JSON.stringify(store.availability, null, 2)}
 			</pre>
 
-			<Show when={isEditMode()}>
+			<Show when={store.isEditMode}>
 				<EditModal
 					slot={getSlot(lastSelectedItem.day, lastSelectedItem.id)}
 					day={lastSelectedItem.day}
-					onModalClose={e => setIsEditMode(false)}
+					onModalClose={e => setStore('isEditMode', false)}
 				/>
 			</Show>
 		</div>

@@ -1,10 +1,5 @@
 import s from '../App.module.css';
-import {
-	getFormatedTime,
-	getFormatedTimeFromSlot,
-	getHoursFromTime,
-	getMinutesFromTime,
-} from '../lib/helpers';
+import { getHoursFromTime, getMinutesFromTime } from '../lib/helpers';
 
 function EditModal(props) {
 	function handleChange(e, type) {
