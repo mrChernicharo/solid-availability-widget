@@ -34,22 +34,6 @@ export function dayToLeftPos(day, containerWidth) {
 	return leftPos;
 }
 
-// *************************************************  //
-
-export function getElementRect(ref) {
-	return ref.getBoundingClientRect();
-}
-
-export function setCSSVariable(key, val) {
-	document.documentElement.style.setProperty(key, val);
-}
-
-export function getCSSVariable(key) {
-	return getComputedStyle(document.documentElement)
-		.getPropertyValue(key)
-		.trim();
-}
-
 // ************************************************** //
 
 export function mergeTimeslots(timeSlots, overlappingIds) {
@@ -179,7 +163,21 @@ export function getFormatedTimeFromSlot(slot) {
 	return `${getFormatedTime(start)} - ${getFormatedTime(end)}`;
 }
 
-//
+// *************************************************  //
+
+export function getElementRect(ref) {
+	return ref.getBoundingClientRect();
+}
+
+export function setCSSVariable(key, val) {
+	document.documentElement.style.setProperty(key, val);
+}
+
+export function getCSSVariable(key) {
+	return getComputedStyle(document.documentElement)
+		.getPropertyValue(key)
+		.trim();
+}
 
 export const idMaker = () =>
 	Array(12)

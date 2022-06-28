@@ -274,6 +274,7 @@ function App() {
 			<Show when={isEditMode()}>
 				<EditModal
 					slot={getSlot(lastSelectedItem.day, lastSelectedItem.id)}
+					day={lastSelectedItem.day}
 					onModalClose={e => setIsEditMode(false)}
 				/>
 			</Show>
