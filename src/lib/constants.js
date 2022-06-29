@@ -1,3 +1,4 @@
+import { createStore } from 'solid-js/store';
 export const ID_CHARS =
 	'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-';
 
@@ -25,6 +26,14 @@ export const initialAvailability = {
 	sat: [],
 	sun: [],
 };
+
+export const appStore = createStore({
+	availability: initialAvailability,
+	gesture: 'idle',
+	selectedItem: null,
+	cursor: 'default',
+	isEditMode: false,
+});
 
 export const WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
