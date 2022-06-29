@@ -142,6 +142,13 @@ export function getHoursFromTime(time) {
 	return Number.isNaN(res) ? 0 : res;
 }
 
+// export function getTimeFromHourString(hour) {
+// 	let res = hour * 60
+// 	// let res = Math.floor(time / 60);
+// 	// if (res === 24) res = 0; // we don't want 24:00
+// 	return Number.isNaN(res) ? 0 : res;
+// }
+
 export function getMinutesFromTime(time) {
 	const res = Math.floor(time % 60);
 	return Number.isNaN(res) ? 0 : res;

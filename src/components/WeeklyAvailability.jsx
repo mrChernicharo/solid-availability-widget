@@ -199,7 +199,7 @@ export default function WeeklyAvailability(props) {
 		}
 
 		setStore('gesture', 'idle');
-		props.onChange(unwrap(store));
+		// props.onChange(unwrap(store));
 	}
 
 	createEffect(() => {

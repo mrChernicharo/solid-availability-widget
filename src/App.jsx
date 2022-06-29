@@ -7,15 +7,13 @@ let WeeklyAvailability = lazy(() => import('./components/WeeklyAvailability'));
 function App() {
 	function handleAvailabilityChange(availability) {
 		// const obj = Object.keys(availability).map(k => availability[k]);
-		console.log(availability);
+		// console.log(availability);
 	}
 
 	return (
 		<div class={s.App}>
 			<AppHeader />
-			<Suspense fallback={<div>...loading</div>}>
-				<WeeklyAvailability onChange={handleAvailabilityChange} />
-			</Suspense>
+			<WeeklyAvailability onChange={handleAvailabilityChange} />
 		</div>
 	);
 }
