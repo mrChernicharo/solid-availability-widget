@@ -116,23 +116,15 @@ export function getMergedTimeslots(newTimeSlot, newTimeslots) {
 }
 
 export function snap(val) {
-	const snap = 15;
-	const mod = val % snap;
+	const snap = 15; // 30?
+	const mod = parseInt(val) % snap;
 
-	const roundUp = mod > Math.floor(snap);
+	const roundUp = mod > Math.floor(snap) / 2;
 
 	return roundUp ? val + snap - mod : val - mod;
 }
 
 // export function snapTimeslot(val) {}
-
-// ************************************************  //
-
-export const createTimeslotDraggedEvent = (yPos, timeslot, weekday) => {
-	return new CustomEvent(`timeslotDragged:${weekday}`, {
-		detail: { yPos, timeslot },
-	});
-};
 
 // *************************************************** //
 

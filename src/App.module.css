@@ -13,7 +13,7 @@
 
 .OuterGrid {
 	border: 1px solid;
-	width: min(100vw, 800px);
+	width: min(94vw, 800px);
 	margin: 0 auto;
 	display: grid;
 	grid-template-columns: var(--side-bar-width) 1fr;

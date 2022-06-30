@@ -64,8 +64,8 @@ export default function WeeklyAvailability(props) {
 			return;
 		}
 
-		// WHAT AREA ARE WE DRAGGING?
 		if (store.gesture === 'drag:ready') {
+			// WHAT AREA ARE WE DRAGGING?
 			const topThumbRegex = /_TopThumb_/g;
 			const bottomThumbRegex = /_BottomThumb_/g;
 
@@ -183,6 +183,8 @@ export default function WeeklyAvailability(props) {
 			// clicked simply (no drag)
 			if (store.gesture === 'drag:ready') {
 				setStore('isEditMode', true);
+				setStore('gesture', 'idle');
+				return
 			}
 
 			const { id, day } = store.selectedItem;
