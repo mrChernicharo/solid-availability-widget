@@ -106,8 +106,8 @@ export default function WeeklyAvailability(props) {
 
 			const newSlot = {
 				id,
-				start: slotStart,
-				end: slotEnd,
+				start: parseInt(slotStart),
+				end: parseInt(slotEnd),
 			};
 
 			setStore('availability', day, prev => [
@@ -136,8 +136,8 @@ export default function WeeklyAvailability(props) {
 
 			const newSlot = {
 				id,
-				start: slotStart,
-				end: slotEnd,
+				start: parseInt(slotStart),
+				end: parseInt(slotEnd),
 			};
 
 			setStore('availability', day, prev => [
@@ -166,8 +166,8 @@ export default function WeeklyAvailability(props) {
 
 			const newSlot = {
 				id,
-				start: slotStart,
-				end: slotEnd,
+				start: parseInt(slotStart),
+				end: parseInt(slotEnd),
 			};
 
 			setStore('availability', day, prev => [
