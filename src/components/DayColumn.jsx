@@ -1,5 +1,5 @@
 import { createEffect, createSignal, onMount, For, onCleanup } from 'solid-js';
-import s from '../App.module.css';
+import s from '../styles/App.module.css';
 import { appStore, GRID_CHUNKS } from '../lib/constants';
 import {
 	getElementRect,

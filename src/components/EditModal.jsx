@@ -1,5 +1,6 @@
 import { unwrap } from 'solid-js/store';
-import s from '../App.module.css';
+import { FaSolidTrash } from 'solid-icons/fa';
+import s from '../styles/App.module.css';
 import { appStore } from '../lib/constants';
 import {
 	getHoursFromTime,
@@ -24,35 +25,58 @@ function EditModal(props) {
 
 		const actions = {
 			'start:hour'() {
-				if (val <= 0) { startHourRef.target.value = 0; val = 0 }
-				if (val > 23) { startHourRef.target.value = 23; val = 23 }
+				if (val <= 0) {
+					startHourRef.target.value = 0;
+					val = 0;
+				}
+				if (val > 23) {
+					startHourRef.target.value = 23;
+					val = 23;
+				}
 
 				let sMinutes = newStart % 60;
-				let sHours = parseInt(newStart / 60)
-				let diff = (val - sHours) * 60
-				newStart = newStart + diff - sMinutes
-
+				let sHours = parseInt(newStart / 60);
+				let diff = (val - sHours) * 60;
+				newStart = newStart + diff - sMinutes;
 			},
 			'start:min'() {
-				if (val <= 0) { startMinuteRef.target.value = 0; val = 0 }
-				if (val > 59) { startMinuteRef.target.value = 59; val = 59 }
+				if (val <= 0) {
+					startMinuteRef.target.value = 0;
+					val = 0;
+				}
+				if (val > 59) {
+					startMinuteRef.target.value = 59;
+					val = 59;
+				}
 
 				let sMinutes = newStart % 60;
 				let diff = val - sMinutes;
 				newStart = newStart + diff;
 			},
 			'end:hour'() {
-				if (val <= 0) { endHourRef.target.value = 0; val = 0 }
-				if (val > 23) { endHourRef.target.value = 23; val = 23 }
+				if (val <= 0) {
+					endHourRef.target.value = 0;
+					val = 0;
+				}
+				if (val > 23) {
+					endHourRef.target.value = 23;
+					val = 23;
+				}
 
 				let eMinutes = newEnd % 60;
-				let eHours = parseInt(newEnd / 60)
-				let diff = (val - eHours) * 60
-				newEnd = newEnd + diff - eMinutes
+				let eHours = parseInt(newEnd / 60);
+				let diff = (val - eHours) * 60;
+				newEnd = newEnd + diff - eMinutes;
 			},
 			'end:min'() {
-				if (val <= 0) { endMinuteRef.target.value = 0; val = 0 }
-				if (val > 59) { endMinuteRef.target.value = 59; val = 59 }
+				if (val <= 0) {
+					endMinuteRef.target.value = 0;
+					val = 0;
+				}
+				if (val > 59) {
+					endMinuteRef.target.value = 59;
+					val = 59;
+				}
 
 				let sMinutes = newEnd % 60;
 				let diff = val - sMinutes;
@@ -89,6 +113,13 @@ function EditModal(props) {
 		// );
 
 		// setStore('availability', props.day, prev => [...merged]);
+	}
+
+	function handleDelete(e) {
+		props.onModalClose(e);
+		setStore('availability', props.day, prev => [
+			...prev.filter(s => s.id !== props.slot.id),
+		]);
 	}
 
 	return (
@@ -160,6 +191,10 @@ function EditModal(props) {
 						onInput={e => handleChange(e.target.value, 'end:min')}
 					/>
 				</div>
+
+				<button onClick={handleDelete}>
+					<FaSolidTrash />
+				</button>
 			</div>
 			<div className={s.Overlay} onclick={props.onModalClose}></div>
 		</>

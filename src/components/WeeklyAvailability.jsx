@@ -1,5 +1,5 @@
 import { createEffect, createSignal, onCleanup, onMount } from 'solid-js';
-import s from '../App.module.css';
+import s from '../styles/App.module.css';
 import AppHeader from './AppHeader';
 import DayColumn from './DayColumn';
 import EditModal from './EditModal';

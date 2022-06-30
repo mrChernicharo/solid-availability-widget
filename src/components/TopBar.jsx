@@ -1,5 +1,5 @@
 import { For } from 'solid-js';
-import s from '../App.module.css';
+import s from '../styles/App.module.css';
 import { WEEKDAYS } from '../lib/constants';
 
 function TopBar() {
