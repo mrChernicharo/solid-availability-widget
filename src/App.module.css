@@ -135,6 +135,11 @@
 
 .DataPeek {
 	text-align: left;
+	padding: 1rem;
+	margin: 1rem auto;
+	background-color: black;
+	width: min(94vw, 600px);
+	border-radius: 12px;
 }
 
 /* md, lg, xl screens only */

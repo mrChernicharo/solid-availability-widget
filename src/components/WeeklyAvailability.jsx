@@ -194,9 +194,7 @@ export default function WeeklyAvailability(props) {
 
 			const el = document.querySelector(`#${store.selectedItem.id}`);
 
-			el.classList.remove('dragging');
 			setStore('selectedItem', null);
-
 			setStore('availability', day, prev => [...merged]);
 		}
 
@@ -207,15 +205,7 @@ export default function WeeklyAvailability(props) {
 	createEffect(() => {
 		document.body.style.cursor = store.cursor;
 	});
-	createEffect(() => {
-		if (store.selectedItem?.id) {
-			const el = document.querySelector(`#${store.selectedItem.id}`);
 
-			if (el) {
-				el.classList.add('dragging');
-			}
-		}
-	});
 
 	onMount(() => {
 		document.addEventListener('pointerup', handlePointerUp);
@@ -250,9 +240,7 @@ export default function WeeklyAvailability(props) {
 					</For>
 				</div>
 			</OuterGrid>
-			<pre class={s.DataPeek}>
-				{JSON.stringify(store.availability, null, 2)}
-			</pre>
+
 			<Show when={store.isEditMode}>
 				<EditModal
 					slot={getSlot(lastSelectedItem.day, lastSelectedItem.id)}
