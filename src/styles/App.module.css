@@ -129,8 +129,9 @@
 	width: 10000px;
 	height: 10000px;
 	background: #224;
-	opacity: 0.2;
+	opacity: 0.4;
 	top: 0;
+	z-index: 1;
 }
 
 .DataPeek {
