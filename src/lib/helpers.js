@@ -150,16 +150,16 @@ export function formatTimeUnit(time) {
 	return time >= 10 ? `${time}` : `0${time}`;
 }
 
-export function getFormatedTime(time) {
+export function getFormattedTime(time) {
 	const [h, m] = [getHoursFromTime(time), getMinutesFromTime(time)];
 
 	return `${formatTimeUnit(h)}:${formatTimeUnit(m)}`;
 }
 
-export function getFormatedTimeFromSlot(slot) {
+export function getFormattedTimeFromSlot(slot) {
 	const { start, end } = slot;
 
-	return `${getFormatedTime(start)} - ${getFormatedTime(end)}`;
+	return `${getFormattedTime(start)} - ${getFormattedTime(end)}`;
 }
 
 // *************************************************  //

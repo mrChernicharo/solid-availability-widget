@@ -3,7 +3,7 @@ import s from "../styles/App.module.css";
 import { appStore, GRID_CHUNKS } from "../lib/constants";
 import {
 	getElementRect,
-	getFormatedTimeFromSlot,
+	getFormattedTimeFromSlot,
 	idMaker,
 	timeToYPos,
 	yPosToTime,
@@ -49,7 +49,7 @@ function DayColumn(props) {
 								height: height(slot),
 							}}>
 							<div class={`${s.Thumb} ${s.TopThumb}`}></div>
-							{getFormatedTimeFromSlot(slot)}
+							{getFormattedTimeFromSlot(slot)}
 							<div class={`${s.Thumb} ${s.BottomThumb}`}></div>
 						</div>
 					);

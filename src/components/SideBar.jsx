@@ -1,7 +1,7 @@
 import { For } from "solid-js";
 import s from "../styles/App.module.css";
 import { GRID_CHUNKS } from "../lib/constants";
-import { getFormatedTime } from "../lib/helpers";
+import { getFormattedTime } from "../lib/helpers";
 
 function SideBar() {
 	return (
@@ -13,7 +13,7 @@ function SideBar() {
 						style={{
 							height: `calc(100% / ${GRID_CHUNKS.length})`,
 						}}>
-						<div>{getFormatedTime(chunk)}</div>
+						<div>{getFormattedTime(chunk)}</div>
 					</div>
 				)}
 			</For>
