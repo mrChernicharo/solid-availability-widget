@@ -178,11 +178,3 @@ export function getCSSVariable(key) {
 		.trim();
 }
 
-export const idMaker = () =>
-	Array(12)
-		.fill(0)
-		.map(
-			item =>
-				ID_CHARS.split('')[Math.round(Math.random() * ID_CHARS.length)]
-		)
-		.join('');

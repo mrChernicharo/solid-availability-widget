@@ -7,14 +7,9 @@ import OuterGrid from "./OuterGrid";
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 import { appStore, WEEKDAYS } from "../lib/constants";
-import {
-	getElementRect,
-	getMergedTimeslots,
-	idMaker,
-	snap,
-	yPosToTime,
-} from "../lib/helpers";
+import { getElementRect, getMergedTimeslots, snap, yPosToTime } from "../lib/helpers";
 import { unwrap } from "solid-js/store";
+import idMaker from "@melodev/id-maker";
 
 export default function WeeklyAvailability(props) {
 	let gridRef;

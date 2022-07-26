@@ -4,10 +4,10 @@ import { appStore, GRID_CHUNKS } from "../lib/constants";
 import {
 	getElementRect,
 	getFormattedTimeFromSlot,
-	idMaker,
 	timeToYPos,
 	yPosToTime,
 } from "../lib/helpers";
+import idMaker from "@melodev/id-maker";
 
 function DayColumn(props) {
 	let columnRef;
