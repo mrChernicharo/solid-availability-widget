@@ -44,8 +44,6 @@ export default function WeeklyAvailability(props) {
 
 		const MIN_SNAP_FACTOR = Math.max(props.minuteSnap, 30);
 
-		console.log("CREATE NEW TIMESLOT", clickTime, day, store.gesture);
-
 		// CREATE NEW TIMESLOT
 		let [slotStart, slotEnd] = [
 			clickTime - MIN_SNAP_FACTOR * 0.5,
@@ -66,16 +64,27 @@ export default function WeeklyAvailability(props) {
 		};
 
 		const slotClicked = store.availability[day].find(
-			slot => clickTime >= slot.start && clickTime <= slot.end
+			// gambiarrinha do - 10
+			slot => slot.start - 10 <= clickTime && slot.end >= clickTime
 		);
 
+		console.log({
+			clickTime,
+			slot,
+			slotClicked,
+			dentro: !!slotClicked,
+			avs: store.availability[day],
+			avs0: store.availability[day][0],
+		});
+
 		if (slotClicked) {
-			// console.log({ slotClicked });
+			console.log("Existe!", { slotClicked });
 			setStore("gesture", "drag:ready");
 			setStore("selectedItem", { id: slotClicked.id, day });
 			lastSelectedItem = store.selectedItem;
 			return;
 		}
+		console.log("CREATE NEW TIMESLOT", clickTime, day, store.gesture);
 
 		const merged = getMergedTimeslots(
 			slot,

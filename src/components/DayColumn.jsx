@@ -21,9 +21,9 @@ function DayColumn(props) {
 
 	const rect = () => getElementRect(columnRef);
 
-	const top = slot => timeToYPos(slot.start, 900) + "px";
+	const top = slot => timeToYPos(slot.start, 800) + "px";
 
-	const height = slot => timeToYPos(slot.end, 900) - timeToYPos(slot.start, 900) + "px";
+	const height = slot => timeToYPos(slot.end, 800) - timeToYPos(slot.start, 800) + "px";
 
 	// createRenderEffect(() => console.log(columnRef));
 
@@ -69,7 +69,7 @@ function DayColumn(props) {
 						<div
 							class={s.GridLine}
 							style={{
-								top: (900 / 24) * i() + "px",
+								top: (800 / 24) * i() + "px",
 								"border-bottom": `1px solid ${
 									props.theme === "light" ? "#ddd" : "#444"
 								}`,
