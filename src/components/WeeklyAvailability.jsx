@@ -256,10 +256,10 @@ export default function WeeklyAvailability(props) {
 
 	return (
 		<>
-			<OuterGrid>
-				<TopBar />
+			<OuterGrid theme={props.theme}>
+				<TopBar theme={props.theme} />
 
-				<SideBar />
+				<SideBar theme={props.theme} />
 
 				<div ref={gridRef} class={s.InnerGrid}>
 					<For each={WEEKDAYS}>
@@ -269,6 +269,7 @@ export default function WeeklyAvailability(props) {
 								timeslots={store.availability[day]}
 								onpointerdown={e => handleClick(e, day)}
 								width={columnWidth()}
+								theme={props.theme}
 							/>
 						)}
 					</For>
@@ -276,6 +277,7 @@ export default function WeeklyAvailability(props) {
 			</OuterGrid>
 			<Show when={store.isEditMode}>
 				<EditModal
+					theme={props.theme}
 					slot={getSlot(lastSelectedItem.day, lastSelectedItem.id)}
 					day={lastSelectedItem.day}
 					onModalClose={e => {

@@ -35,7 +35,8 @@
 
 .TopBar > div:first-child {
 	height: 100%;
-	background-color: #224;
+	/* background-color: #224; */
+	background: #444;
 }
 
 .TopBar > div:not(:first-child) {
@@ -44,7 +45,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border-left: 1px solid;
+	/* border-left: 1px solid; */
 }
 
 .SideBar {
@@ -74,11 +75,11 @@
 }
 
 .DayColumn {
-	border-left: 1px solid;
+	/* border-left: 1px solid; */
 	position: relative;
 	height: 100%;
-	box-shadow: inset 7px 20px 83px 5px rgba(0, 0, 0, 0.24),
-		inset 0px 10px 75px 23px rgba(0, 0, 0, 0.24);
+	/* box-shadow: inset 7px 20px 83px 5px rgba(0, 0, 0, 0.24),
+		inset 0px 10px 75px 23px rgba(0, 0, 0, 0.24); */
 }
 
 .Timeslot {
@@ -94,7 +95,7 @@
 	border-radius: 8px;
 	background-color: dodgerblue;
 	opacity: 0.8;
-	/* transition: 0.3s; */
+	z-index: 2;
 }
 
 .Thumb {
@@ -112,9 +113,9 @@
 
 .GridLine {
 	position: absolute;
-	border-bottom: 1px solid #444;
+	/* border-bottom: 1px solid #444; */
 	width: 100%;
-	z-index: -1;
+	z-index: 0;
 }
 
 .EditModal {
@@ -126,7 +127,7 @@
 	transform: translateX(-50%);
 	margin: auto;
 	background: #666;
-	z-index: 2;
+	z-index: 4;
 	transition: 0.3s;
 }
 
@@ -137,7 +138,7 @@
 	background: #224;
 	opacity: 0.4;
 	top: 0;
-	z-index: 1;
+	z-index: 3;
 }
 
 .DataPeek {

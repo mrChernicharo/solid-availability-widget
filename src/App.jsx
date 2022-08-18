@@ -20,7 +20,12 @@ function App() {
 
 			{/* <div style={{ display: 'flex' }}> */}
 			<Show when={open()}>
-				<WeeklyAvailability onChange={handleAvailabilityChange} minuteSnap={5} />
+				<WeeklyAvailability
+					onChange={handleAvailabilityChange}
+					minuteSnap={30}
+					theme="dark"
+					// theme="light"
+				/>
 			</Show>
 
 			<div class={s.DataPeek}>

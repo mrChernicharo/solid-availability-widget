@@ -29,7 +29,10 @@ function DayColumn(props) {
 			id={props.day}
 			ref={columnRef}
 			class={s.DayColumn}
-			onpointerdown={props.onpointerdown}>
+			onpointerdown={props.onpointerdown}
+			style={{
+				"border-left": `1px solid ${props.theme === "light" ? "#ddd" : "#444"}`,
+			}}>
 			<For each={props.timeslots}>
 				{slot => {
 					// console.log({ slot, top: top(slot), height: height(slot) });
@@ -47,6 +50,9 @@ function DayColumn(props) {
 								left: props.width * 0.1 + "px",
 								top: top(slot),
 								height: height(slot),
+								"border-left": `1px solid ${
+									props.theme === "light" ? "#ddd" : "#444"
+								}`,
 							}}>
 							<div class={`${s.Thumb} ${s.TopThumb}`}></div>
 							{getFormattedTimeFromSlot(slot)}
@@ -63,6 +69,9 @@ function DayColumn(props) {
 							class={s.GridLine}
 							style={{
 								top: (768 / 24) * i() + "px",
+								"border-bottom": `1px solid ${
+									props.theme === "light" ? "#ddd" : "#444"
+								}`,
 							}}></div>
 					);
 				}}
