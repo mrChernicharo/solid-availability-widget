@@ -7,10 +7,10 @@ let WeeklyAvailability = lazy(() => import("./components/WeeklyAvailability"));
 
 function App() {
 	const [open, setOpen] = createSignal(true);
-	// const [store, setStore] = appStore;
+	const [availability, setAvailability] = createSignal({});
 
 	function handleAvailabilityChange(availability) {
-		console.log(availability);
+		setAvailability(availability);
 	}
 
 	return (
@@ -20,12 +20,12 @@ function App() {
 
 			{/* <div style={{ display: 'flex' }}> */}
 			<Show when={open()}>
-				<WeeklyAvailability onChange={handleAvailabilityChange} />
+				<WeeklyAvailability onChange={handleAvailabilityChange} minuteSnap={5} />
 			</Show>
 
 			<div class={s.DataPeek}>
 				<h4>Availability</h4>
-				{/* <pre>{JSON.stringify(availability, null, 2)}</pre> */}
+				<pre>{JSON.stringify(availability(), null, 2)}</pre>
 			</div>
 			{/* </div> */}
 		</div>

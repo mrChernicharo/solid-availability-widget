@@ -11,12 +11,15 @@
 }
 
 .OuterGrid {
-	border: 1px solid;
-	width: min(96vw, 800px);
+	/* border: 1px solid; */
+	/* width: min(96vw, 800px); */
+	width: max(96vw, 800px);
 	margin: 0 auto;
 	display: grid;
 	grid-template-columns: var(--side-bar-width) 1fr;
 	grid-template-rows: 40px 768px;
+
+	position: relative;
 }
 
 .TopBar {
@@ -32,6 +35,7 @@
 
 .TopBar > div:first-child {
 	height: 100%;
+	background-color: #224;
 }
 
 .TopBar > div:not(:first-child) {
@@ -46,6 +50,7 @@
 .SideBar {
 	user-select: none;
 	grid-column: 1 / 2;
+	background-color: #224;
 	/* border: 1px solid; */
 }
 

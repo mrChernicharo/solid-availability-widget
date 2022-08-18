@@ -42,14 +42,27 @@ export default function WeeklyAvailability(props) {
 
 		const clickTime = yPosToTime(e.clientY, height, top);
 
-		let [slotStart, slotEnd] = [clickTime - 30, clickTime + 30];
-		if (slotStart < 30) [slotStart, slotEnd] = [0, 60];
-		if (slotEnd > 1440) [slotStart, slotEnd] = [1380, 1440];
+		const MIN_SNAP_FACTOR = Math.max(props.minuteSnap, 30);
+
+		console.log("CREATE NEW TIMESLOT", clickTime, day, store.gesture);
+
+		// CREATE NEW TIMESLOT
+		let [slotStart, slotEnd] = [
+			clickTime - MIN_SNAP_FACTOR * 0.5,
+			clickTime + MIN_SNAP_FACTOR * 0.5,
+		];
+
+		if (slotStart < props.minuteSnap) {
+			[slotStart, slotEnd] = [0, MIN_SNAP_FACTOR];
+		}
+		if (slotEnd > 1440) {
+			[slotStart, slotEnd] = [1440 - MIN_SNAP_FACTOR, 1440];
+		}
 
 		const slot = {
 			id: idMaker(),
-			start: snap(slotStart),
-			end: snap(slotEnd),
+			start: snap(slotStart, MIN_SNAP_FACTOR),
+			end: snap(slotEnd, MIN_SNAP_FACTOR),
 		};
 
 		const slotClicked = store.availability[day].find(
@@ -64,7 +77,11 @@ export default function WeeklyAvailability(props) {
 			return;
 		}
 
-		const merged = getMergedTimeslots(slot, store.availability[day]);
+		const merged = getMergedTimeslots(
+			slot,
+			store.availability[day],
+			props.minuteSnap
+		);
 
 		setStore("availability", day, prev => [...merged]);
 	}
@@ -185,21 +202,26 @@ export default function WeeklyAvailability(props) {
 	}
 
 	function handlePointerUp(e) {
-		// console.log("handlePointerUp", store.selectedItem, store.gesture);
+		console.log("handlePointerUp", store.selectedItem, store.gesture);
 		if (store.selectedItem) {
 			// clicked simply (no drag)
 			if (store.gesture === "drag:ready") {
 				setStore("isEditMode", true);
 				setStore("gesture", "idle");
+				// return; // prevent snapping
 			}
 
 			const { id, day } = store.selectedItem;
 			const slot = getSlot(day, id);
 
-			const merged = getMergedTimeslots(slot, store.availability[day]);
+			const merged = getMergedTimeslots(
+				slot,
+				store.availability[day],
+				props.minuteSnap
+			);
 
-			setStore("selectedItem", null);
 			setStore("availability", day, prev => [...merged]);
+			setStore("selectedItem", null);
 		}
 
 		setStore("gesture", "idle");
@@ -208,13 +230,14 @@ export default function WeeklyAvailability(props) {
 
 	// document.body.style.cursor = store.cursor;
 	// console.log(unwrap({ ...store.availability }));
-	WEEKDAYS.forEach(day => {
-		createEffect(() => {
-			const avail = unwrap([...store.availability[day]]);
-
-			props.onChange(avail.map(item => ({ day, ...item })));
-			// throttle(props.onChange(unwrap({ ...store.availability[day] })), 200);
-		});
+	// WEEKDAYS.forEach(day => {
+	createEffect(() => {
+		props.onChange(
+			structuredClone(unwrap({ ...store.availability }))
+			// unwrap([...store.availability[day]]).map(item => ({ day, ...item }))
+		);
+		// throttle(props.onChange(unwrap({ ...store.availability[day] })), 200);
+		// });
 	});
 	// console.log({ isEditMode: store.isEditMode, lastSelectedItem });
 

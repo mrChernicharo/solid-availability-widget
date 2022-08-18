@@ -36,13 +36,9 @@ function EditModal(props) {
 			start: newStart,
 			end: newEnd,
 		};
+		const idx = store.availability[props.day].findIndex(s => s.id === props.slot.id);
 
-		setStore(
-			"availability",
-			props.day,
-			store.availability[props.day].findIndex(s => s.id === props.slot.id),
-			prev => newSlot
-		);
+		setStore("availability", props.day, idx, newSlot);
 	}
 
 	function handleDelete(e) {

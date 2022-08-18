@@ -1,4 +1,4 @@
-import { ID_CHARS, WEEKDAYS, SNAP_OFFSET } from './constants';
+import { ID_CHARS, WEEKDAYS } from './constants';
 
 export function pxToTime(yVariation, columnHeight) {
 	const minutePerPx = 1440 / columnHeight;
@@ -36,7 +36,7 @@ export function dayToLeftPos(day, containerWidth) {
 
 // ************************************************** //
 
-export function mergeTimeslots(timeSlots, overlappingIds) {
+export function mergeTimeslots(timeSlots, overlappingIds, minuteSnap) {
 	const overlapping = timeSlots.filter(item =>
 		overlappingIds.includes(item.id)
 	);
@@ -59,8 +59,8 @@ export function mergeTimeslots(timeSlots, overlappingIds) {
 
 	const snappedSlot = {
 		id: mergedSlot.id,
-		start: snap(mergedSlot.start),
-		end: snap(mergedSlot.end),
+		start: snap(mergedSlot.start, minuteSnap),
+		end: snap(mergedSlot.end, minuteSnap),
 	};
 
 	return snappedSlot;
@@ -88,7 +88,7 @@ export function findOverlappingSlots(timeSlot, timeSlots) {
 	return overlappingItems;
 }
 
-export function getMergedTimeslots(newTimeSlot, newTimeslots) {
+export function getMergedTimeslots(newTimeSlot, newTimeslots,  minuteSnap) {
 	if (!newTimeSlot) return newTimeslots;
 
 	const overlappingItems = findOverlappingSlots(newTimeSlot, newTimeslots);
@@ -100,7 +100,8 @@ export function getMergedTimeslots(newTimeSlot, newTimeslots) {
 
 		const mergedSlot = mergeTimeslots(
 			[...newTimeslots, newTimeSlot],
-			overlappingIds
+			overlappingIds,
+			minuteSnap
 		);
 
 		const filteredSlots = newTimeslots.filter(
@@ -115,13 +116,13 @@ export function getMergedTimeslots(newTimeSlot, newTimeslots) {
 	}
 }
 
-export function snap(val) {
+export function snap(val, snapOffset) {
 	
-	const mod = parseInt(val) % SNAP_OFFSET;
+	const mod = parseInt(val) % snapOffset;
 
-	const roundUp = mod > Math.floor(SNAP_OFFSET) / 2;
+	const roundUp = mod > Math.floor(snapOffset) / 2;
 
-	return roundUp ? val + SNAP_OFFSET - mod : val - mod;
+	return roundUp ? val + snapOffset - mod : val - mod;
 }
 
 // export function snapTimeslot(val) {}
