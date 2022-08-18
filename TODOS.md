@@ -13,3 +13,9 @@
 -   timeslot details [label, color]
 -   dynamize colors
 -   light mode
+
+
+- enhance styling flexibility
+- throttle mousemove/resize events
+
+- implement ctrl + Z

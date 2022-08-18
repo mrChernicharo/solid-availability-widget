@@ -1,4 +1,4 @@
-import { ID_CHARS, WEEKDAYS } from './constants';
+import { ID_CHARS, WEEKDAYS, SNAP_OFFSET } from './constants';
 
 export function pxToTime(yVariation, columnHeight) {
 	const minutePerPx = 1440 / columnHeight;
@@ -116,12 +116,12 @@ export function getMergedTimeslots(newTimeSlot, newTimeslots) {
 }
 
 export function snap(val) {
-	const snap = 15; // 30?
-	const mod = parseInt(val) % snap;
+	
+	const mod = parseInt(val) % SNAP_OFFSET;
 
-	const roundUp = mod > Math.floor(snap) / 2;
+	const roundUp = mod > Math.floor(SNAP_OFFSET) / 2;
 
-	return roundUp ? val + snap - mod : val - mod;
+	return roundUp ? val + SNAP_OFFSET - mod : val - mod;
 }
 
 // export function snapTimeslot(val) {}
@@ -178,3 +178,31 @@ export function getCSSVariable(key) {
 		.trim();
 }
 
+
+
+export function throttle(cb, delay) {
+	let shouldWait = false;
+	let waitingArgs;
+
+	const timeoutFunc = () => {
+		if (waitingArgs == null) {
+			shouldWait = false
+		} else{
+			cb(...waitingArgs);
+			waitingArgs = null;
+			setTimeout(timeoutFunc, delay);
+		}  
+	}
+
+	return (...args) => {
+		if (shouldWait) {
+			waitingArgs = args;
+			return;
+		}
+
+		cb(...args);
+		shouldWait = true;
+
+		setTimeout(timeoutFunc, delay)
+	}
+} 

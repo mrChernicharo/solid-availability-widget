@@ -18,11 +18,11 @@ export const ID_CHARS =
 // ];
 
 export const initialAvailability = {
-	mon: [{ id: 'asd', start: 9 * 60, end: 17 * 60 }],
-	tue: [{ id: 'asd3', start: 9 * 60, end: 17 * 60 }],
-	wed: [{ id: 'a1sd', start: 9 * 60, end: 17 * 60 }],
-	thu: [{ id: 'aesd', start: 9 * 60, end: 17 * 60 }],
-	fri: [{ id: 'aasd', start: 9 * 60, end: 17 * 60 }],
+	mon: [{ id: 'masd', start: 9 * 60, end: 17 * 60 }],
+	tue: [{ id: 'tsd3', start: 9 * 60, end: 17 * 60 }],
+	wed: [{ id: 'w1sd', start: 9 * 60, end: 17 * 60 }],
+	thu: [{ id: 'thsd', start: 9 * 60, end: 17 * 60 }],
+	fri: [{ id: 'frsd', start: 9 * 60, end: 17 * 60 }],
 	sat: [],
 	sun: [],
 };
@@ -46,3 +46,6 @@ console.log(GRID_CHUNKS);
 export const GRID_LINE_HEIGHTS = Array(48)
 	.fill(0)
 	.map((_, i) => i * 30);
+
+
+export const SNAP_OFFSET = 30; // 60 | 30 | 15 | 10 | 5

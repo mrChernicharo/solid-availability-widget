@@ -60,7 +60,7 @@
 
 .InnerGrid {
 	grid-column: 2 / 3;
-	
+
 	/* border: 1px solid; */
 	touch-action: none;
 
@@ -84,12 +84,12 @@
 
 	user-select: none;
 
-	font-size: small;
+	font-size: 10px;
 	cursor: move;
 	border-radius: 8px;
 	background-color: dodgerblue;
 	opacity: 0.8;
-	transition: 0.3s;
+	/* transition: 0.3s; */
 }
 
 .Thumb {

@@ -7,7 +7,13 @@ import OuterGrid from "./OuterGrid";
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 import { appStore, WEEKDAYS } from "../lib/constants";
-import { getElementRect, getMergedTimeslots, snap, yPosToTime } from "../lib/helpers";
+import {
+	getElementRect,
+	getMergedTimeslots,
+	snap,
+	throttle,
+	yPosToTime,
+} from "../lib/helpers";
 import { unwrap } from "solid-js/store";
 import idMaker from "@melodev/id-maker";
 
@@ -69,6 +75,8 @@ export default function WeeklyAvailability(props) {
 			return;
 		}
 
+		// console.log("handlePointerMove");
+
 		if (store.gesture === "drag:ready") {
 			// WHAT AREA ARE WE DRAGGING?
 			const topThumbRegex = /_TopThumb_/g;
@@ -81,10 +89,10 @@ export default function WeeklyAvailability(props) {
 				c.match(bottomThumbRegex)
 			);
 
-			if (isTopHandle) {
+			if (isTopHandle && store.gesture !== "resize:top:active") {
 				return setStore("gesture", "resize:top:active");
 			}
-			if (iSBottomHandle) {
+			if (iSBottomHandle && store.gesture !== "resize:bottom:active") {
 				return setStore("gesture", "resize:bottom:active");
 			}
 			return setStore("gesture", "drag:active");
@@ -94,7 +102,7 @@ export default function WeeklyAvailability(props) {
 		const oldSlot = getSlot(day, id);
 
 		if (store.gesture === "drag:active") {
-			console.log("DRAG");
+			// console.log("DRAG");
 			setStore("cursor", "move");
 
 			let [slotStart, slotEnd] = [
@@ -121,7 +129,7 @@ export default function WeeklyAvailability(props) {
 			]);
 		}
 		if (store.gesture === "resize:top:active") {
-			console.log("TOP RESIZE");
+			// console.log("TOP RESIZE");
 			setStore("cursor", "row-resize");
 
 			let [slotStart, slotEnd] = [oldSlot.start + e.movementY * 1.95, oldSlot.end];
@@ -148,7 +156,7 @@ export default function WeeklyAvailability(props) {
 			]);
 		}
 		if (store.gesture === "resize:bottom:active") {
-			console.log("BOTTOM RESIZE");
+			// console.log("BOTTOM RESIZE");
 			setStore("cursor", "row-resize");
 
 			let [slotStart, slotEnd] = [oldSlot.start, oldSlot.end + e.movementY * 1.95];
@@ -198,10 +206,17 @@ export default function WeeklyAvailability(props) {
 		// props.onChange(unwrap(store));
 	}
 
-	createEffect(() => {
-		// document.body.style.cursor = store.cursor;
-		console.log({ isEditMode: store.isEditMode, lastSelectedItem });
+	// document.body.style.cursor = store.cursor;
+	// console.log(unwrap({ ...store.availability }));
+	WEEKDAYS.forEach(day => {
+		createEffect(() => {
+			const avail = unwrap([...store.availability[day]]);
+
+			props.onChange(avail.map(item => ({ day, ...item })));
+			// throttle(props.onChange(unwrap({ ...store.availability[day] })), 200);
+		});
 	});
+	// console.log({ isEditMode: store.isEditMode, lastSelectedItem });
 
 	createEffect(() => handleScreenResize());
 
@@ -223,7 +238,7 @@ export default function WeeklyAvailability(props) {
 
 				<SideBar />
 
-				<div id="outer-grid-987asd123qwe" ref={gridRef} class={s.InnerGrid}>
+				<div ref={gridRef} class={s.InnerGrid}>
 					<For each={WEEKDAYS}>
 						{day => (
 							<DayColumn
