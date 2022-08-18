@@ -1,5 +1,12 @@
 :root {
-	--side-bar-width: min(12vw, 60px);
+	--qtd-cols: 7.5;
+
+	--base-col-w: 100px;
+	--col-w: var(--base-col-w);
+	--col-h: 900px;
+	--header-h: 20px;
+
+	--mb: 100px;
 }
 
 .App {
@@ -11,48 +18,47 @@
 }
 
 .OuterGrid {
-	/* border: 1px solid; */
-	/* width: min(96vw, 800px); */
-	width: max(96vw, 800px);
+	width: min(calc(var(--col-w) * var(--qtd-cols) + 10px), 96vw);
+	height: calc(var(--col-h) + var(--mb));
+	overflow: auto;
 	margin: 0 auto;
-	display: grid;
-	grid-template-columns: var(--side-bar-width) 1fr;
-	grid-template-rows: 40px 768px;
-
-	position: relative;
+	white-space: nowrap;
+	border: 1px solid;
+	text-align: left;
 }
 
 .TopBar {
-	grid-column: 1 / 3;
-	display: grid;
-	grid-template-columns: var(--side-bar-width) repeat(7, 1fr);
-	align-items: center;
+	border: 1px solid;
+
+	display: inline-flex;
 }
 
 .TopBar > div {
-	user-select: none;
+	height: var(--header-h);
+	text-align: center;
 }
-
-.TopBar > div:first-child {
-	height: 100%;
-	/* background-color: #224; */
-	background: #444;
-}
-
 .TopBar > div:not(:first-child) {
-	background: #444;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	/* border-left: 1px solid; */
+	width: var(--col-w);
+}
+.TopBar > div:first-child {
+	width: calc(var(--col-w) / 2);
 }
 
 .SideBar {
-	user-select: none;
-	grid-column: 1 / 2;
-	background-color: #224;
-	/* border: 1px solid; */
+	position: sticky;
+	text-align: center;
+
+	left: 0;
+	z-index: 100;
+	display: inline-block;
+	height: var(--col-h);
+	width: calc(var(--col-w) / 2);
+	transform: translateY(calc(var(--header-h) * -1));
+	margin: 0;
+}
+
+.SideBar > * {
+	width: calc(var(--col-w) / 2);
 }
 
 .GridHour {
@@ -61,23 +67,24 @@
 
 .GridHour div {
 	font-size: small;
-	transform: translateY(-10px);
+	transform: translateY(-12px);
 }
 
 .InnerGrid {
-	grid-column: 2 / 3;
+	border: 1px solid blue;
 
-	/* border: 1px solid; */
-	touch-action: none;
-
-	display: grid;
-	grid-template-columns: repeat(7, 1fr);
+	touch-action: pan-x, pan-y;
+	position: relative;
+	width: calc(var(--col-w) * var(--qtd-cols));
 }
 
 .DayColumn {
-	/* border-left: 1px solid; */
 	position: relative;
-	height: 100%;
+	width: var(--col-w);
+	height: var(--col-h);
+	color: white;
+	display: inline-block;
+
 	/* box-shadow: inset 7px 20px 83px 5px rgba(0, 0, 0, 0.24),
 		inset 0px 10px 75px 23px rgba(0, 0, 0, 0.24); */
 }
@@ -87,8 +94,12 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
+	text-align: center;
 
 	user-select: none;
+
+	width: calc(var(--col-w) * 0.9);
+	left: calc(calc(var(--col-w) * 0.1) * 0.45);
 
 	font-size: 10px;
 	cursor: move;
@@ -100,7 +111,7 @@
 
 .Thumb {
 	height: min(33%, 16px);
-	/* border: 1px solid red; */
+	/* background-color: orange; */
 }
 
 /* DON'T REMOVE THIS CLASSES! */
@@ -113,7 +124,6 @@
 
 .GridLine {
 	position: absolute;
-	/* border-bottom: 1px solid #444; */
 	width: 100%;
 	z-index: 0;
 }
@@ -161,5 +171,28 @@
 
 	.GridHour div {
 		font-size: medium;
+	}
+}
+
+@media screen and (width > 1860px) {
+	:root {
+		--col-w: calc(var(--base-col-w) * 2);
+	}
+}
+
+@media screen and (width > 1080px) and (width < 1861px) {
+	:root {
+		--col-w: calc(var(--base-col-w) * 1.5);
+	}
+}
+
+@media screen and (width > 620px) and (width < 1081px) {
+	:root {
+		--col-w: calc(var(--base-col-w) * 1.25);
+	}
+}
+@media screen and (width < 621px) {
+	:root {
+		--col-w: calc(var(--base-col-w) * 1);
 	}
 }

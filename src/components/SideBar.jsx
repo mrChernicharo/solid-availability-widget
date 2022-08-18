@@ -12,8 +12,9 @@ function SideBar() {
 						class={s.GridHour}
 						style={{
 							height: `calc(100% / ${GRID_CHUNKS.length})`,
+							// border: "1px solid",
 						}}>
-						<div>{getFormattedTime(chunk)}</div>
+						<div>{chunk === 0 ? "" : getFormattedTime(chunk)}</div>
 					</div>
 				)}
 			</For>

@@ -25,7 +25,7 @@ export default function WeeklyAvailability(props) {
 	const [width, setWidth] = createSignal(0);
 
 	const getSlot = (day, id) => store.availability[day].find(s => s.id === id);
-	const columnWidth = () => width() / 7;
+	// const columnWidth = () => width() / 7;
 
 	function handleScreenResize(e) {
 		setScreenWidth(window.innerWidth);
@@ -242,6 +242,9 @@ export default function WeeklyAvailability(props) {
 	// console.log({ isEditMode: store.isEditMode, lastSelectedItem });
 
 	createEffect(() => handleScreenResize());
+	onMount(() => {
+		console.log(unwrap({ ...store.availability }));
+	});
 
 	onMount(() => {
 		document.addEventListener("pointerup", handlePointerUp);
@@ -259,19 +262,21 @@ export default function WeeklyAvailability(props) {
 			<OuterGrid theme={props.theme}>
 				<TopBar theme={props.theme} />
 
-				<SideBar theme={props.theme} />
-
 				<div ref={gridRef} class={s.InnerGrid}>
+					<SideBar theme={props.theme} />
 					<For each={WEEKDAYS}>
-						{day => (
-							<DayColumn
-								day={day}
-								timeslots={store.availability[day]}
-								onpointerdown={e => handleClick(e, day)}
-								width={columnWidth()}
-								theme={props.theme}
-							/>
-						)}
+						{day => {
+							console.log(store.availability[day]);
+							return (
+								<DayColumn
+									day={day}
+									timeslots={store.availability[day]}
+									onpointerdown={e => handleClick(e, day)}
+									// width={columnWidth()}
+									theme={props.theme}
+								/>
+							);
+						}}
 					</For>
 				</div>
 			</OuterGrid>

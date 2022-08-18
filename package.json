@@ -16,6 +16,7 @@
 	"dependencies": {
 		"@melodev/id-maker": "^1.0.0",
 		"solid-icons": "^0.4.13",
-		"solid-js": "^1.4.2"
+		"solid-js": "^1.4.2",
+		"solid-styled-components": "^0.28.4"
 	}
 }

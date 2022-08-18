@@ -6,6 +6,7 @@ import { appStore } from "./lib/constants";
 let WeeklyAvailability = lazy(() => import("./components/WeeklyAvailability"));
 
 function App() {
+	const [store, setStore] = appStore;
 	const [open, setOpen] = createSignal(true);
 	const [availability, setAvailability] = createSignal({});
 
@@ -24,6 +25,7 @@ function App() {
 					onChange={handleAvailabilityChange}
 					minuteSnap={30}
 					theme="dark"
+					availability={store.availability}
 					// theme="light"
 				/>
 			</Show>

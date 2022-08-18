@@ -1,4 +1,11 @@
-import { createEffect, createSignal, onMount, For, onCleanup } from "solid-js";
+import {
+	createEffect,
+	createRenderEffect,
+	createSignal,
+	onMount,
+	For,
+	onCleanup,
+} from "solid-js";
 import s from "../styles/App.module.css";
 import { appStore, GRID_CHUNKS } from "../lib/constants";
 import {
@@ -7,20 +14,18 @@ import {
 	timeToYPos,
 	yPosToTime,
 } from "../lib/helpers";
-import idMaker from "@melodev/id-maker";
 
 function DayColumn(props) {
 	let columnRef;
 	const [store, setStore] = appStore;
 
 	const rect = () => getElementRect(columnRef);
-	const top = slot => timeToYPos(slot.start, rect().height) + "px";
-	const height = slot =>
-		timeToYPos(slot.end, rect().height) -
-		timeToYPos(slot.start, rect().height) +
-		"px";
 
-	createEffect(() => console.log(props.width));
+	const top = slot => timeToYPos(slot.start, 900) + "px";
+
+	const height = slot => timeToYPos(slot.end, 900) - timeToYPos(slot.start, 900) + "px";
+
+	// createRenderEffect(() => console.log(columnRef));
 
 	const activeStates = ["drag:active", "resize:top:active", "resize:bottom:active"];
 
@@ -31,23 +36,19 @@ function DayColumn(props) {
 			class={s.DayColumn}
 			onpointerdown={props.onpointerdown}
 			style={{
-				"border-left": `1px solid ${props.theme === "light" ? "#ddd" : "#444"}`,
+				"border-right": `1px solid ${props.theme === "light" ? "#ddd" : "#444"}`,
 			}}>
 			<For each={props.timeslots}>
 				{slot => {
-					// console.log({ slot, top: top(slot), height: height(slot) });
 					return (
 						<div
 							id={slot.id}
-							// class={s.Timeslot}
 							class={`${s.Timeslot} ${
 								activeStates.includes(store.gesture) &&
 								slot.id === store.selectedItem?.id &&
 								"dragging"
 							}`}
 							style={{
-								width: props.width * 0.8 + "px",
-								left: props.width * 0.1 + "px",
 								top: top(slot),
 								height: height(slot),
 								"border-left": `1px solid ${
@@ -68,7 +69,7 @@ function DayColumn(props) {
 						<div
 							class={s.GridLine}
 							style={{
-								top: (768 / 24) * i() + "px",
+								top: (900 / 24) * i() + "px",
 								"border-bottom": `1px solid ${
 									props.theme === "light" ? "#ddd" : "#444"
 								}`,
