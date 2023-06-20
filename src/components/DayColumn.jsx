@@ -41,7 +41,11 @@ function DayColumn(props) {
 
 	createEffect(() => handleScreenResize());
 
-	const activeStates = ['drag:active', 'resize:top:active', 'resize:bottom:active']
+	const activeStates = [
+		'drag:active',
+		'resize:top:active',
+		'resize:bottom:active',
+	];
 
 	return (
 		<div
@@ -52,12 +56,14 @@ function DayColumn(props) {
 		>
 			<For each={props.timeslots}>
 				{slot => {
-					// console.log({ slot, top: top(slot), height: height(slot) });
 					return (
 						<div
 							id={slot.id}
-							// class={s.Timeslot}
-							class={`${s.Timeslot} ${activeStates.includes(store.gesture) && slot.id === store.selectedItem?.id && 'dragging'}`}
+							class={`${s.Timeslot} ${
+								activeStates.includes(store.gesture) &&
+								slot.id === store.selectedItem?.id &&
+								'dragging'
+							}`}
 							style={{
 								width: width() * 0.8 + 'px',
 								left: width() * 0.1 + 'px',
@@ -79,7 +85,7 @@ function DayColumn(props) {
 						<div
 							class={s.GridLine}
 							style={{
-								top: (768 / 24) * i() + 'px',
+								top: (816 / 24) * i() + 'px',
 							}}
 						></div>
 					);

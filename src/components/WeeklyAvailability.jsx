@@ -184,7 +184,7 @@ export default function WeeklyAvailability(props) {
 			if (store.gesture === 'drag:ready') {
 				setStore('isEditMode', true);
 				setStore('gesture', 'idle');
-				return
+				return;
 			}
 
 			const { id, day } = store.selectedItem;
@@ -206,7 +206,6 @@ export default function WeeklyAvailability(props) {
 		document.body.style.cursor = store.cursor;
 	});
 
-
 	onMount(() => {
 		document.addEventListener('pointerup', handlePointerUp);
 		document.addEventListener('pointermove', handlePointerMove);
@@ -218,7 +217,6 @@ export default function WeeklyAvailability(props) {
 
 	return (
 		<>
-			{' '}
 			<OuterGrid>
 				<TopBar />
 

@@ -21,16 +21,16 @@ function App() {
 				{open() ? 'Close' : 'Open'}
 			</button>
 
-			{/* <div style={{ display: 'flex' }}> */}
-			<Show when={open()}>
-				<WeeklyAvailability onChange={handleAvailabilityChange} />
-			</Show>
+			<div class={s.Main}>
+				<Show when={open()}>
+					<WeeklyAvailability onChange={handleAvailabilityChange} />
+				</Show>
 
-			<div class={s.DataPeek}>
-				<h4>Availability</h4>
-				<pre>{JSON.stringify(store.availability, null, 2)}</pre>
+				<div class={s.DataPeek}>
+					<h4>Availability</h4>
+					<pre>{JSON.stringify(store.availability, null, 2)}</pre>
+				</div>
 			</div>
-			{/* </div> */}
 		</div>
 	);
 }
