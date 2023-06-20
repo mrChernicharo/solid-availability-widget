@@ -3,17 +3,15 @@ import s from '../styles/App.module.css';
 import { appStore, GRID_CHUNKS } from '../lib/constants';
 import {
 	getElementRect,
-	getFormatedTimeFromSlot,
-	idMaker,
+	getFormattedTimeFromSlot,
 	timeToYPos,
 	yPosToTime,
 } from '../lib/helpers';
+import idMaker from '@melodev/id-maker';
 
 function DayColumn(props) {
 	let columnRef;
 	const [store, setStore] = appStore;
-	const [screenWidth, setScreenWidth] = createSignal(0);
-	const [width, setWidth] = createSignal(0);
 
 	const rect = () => getElementRect(columnRef);
 	const top = slot => timeToYPos(slot.start, rect().height) + 'px';
@@ -22,24 +20,7 @@ function DayColumn(props) {
 		timeToYPos(slot.start, rect().height) +
 		'px';
 
-	function handleScreenResize(e) {
-		setScreenWidth(window.innerWidth);
-
-		setWidth(
-			getElementRect(document.querySelector('#outer-grid-987asd123qwe'))
-				.width / 7
-		);
-	}
-
-	onMount(() => {
-		window.addEventListener('resize', handleScreenResize);
-	});
-
-	onCleanup(() => {
-		window.removeEventListener('resize', handleScreenResize);
-	});
-
-	createEffect(() => handleScreenResize());
+	createEffect(() => console.log(props.width));
 
 	const activeStates = [
 		'drag:active',
@@ -59,20 +40,21 @@ function DayColumn(props) {
 					return (
 						<div
 							id={slot.id}
+							// class={s.Timeslot}
 							class={`${s.Timeslot} ${
 								activeStates.includes(store.gesture) &&
 								slot.id === store.selectedItem?.id &&
 								'dragging'
 							}`}
 							style={{
-								width: width() * 0.8 + 'px',
-								left: width() * 0.1 + 'px',
+								width: props.width * 0.8 + 'px',
+								left: props.width * 0.1 + 'px',
 								top: top(slot),
 								height: height(slot),
 							}}
 						>
 							<div class={`${s.Thumb} ${s.TopThumb}`}></div>
-							{getFormatedTimeFromSlot(slot)}
+							{getFormattedTimeFromSlot(slot)}
 							<div class={`${s.Thumb} ${s.BottomThumb}`}></div>
 						</div>
 					);

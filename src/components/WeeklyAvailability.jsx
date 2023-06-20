@@ -10,21 +10,31 @@ import { appStore, WEEKDAYS } from '../lib/constants';
 import {
 	getElementRect,
 	getMergedTimeslots,
-	idMaker,
 	snap,
 	yPosToTime,
 } from '../lib/helpers';
 import { unwrap } from 'solid-js/store';
+import idMaker from '@melodev/id-maker';
 
 export default function WeeklyAvailability(props) {
 	let gridRef;
 	let lastSelectedItem;
 	const [store, setStore] = appStore;
+	const [screenWidth, setScreenWidth] = createSignal(0);
+	const [width, setWidth] = createSignal(0);
 
 	const getSlot = (day, id) => store.availability[day].find(s => s.id === id);
+	const columnWidth = () => width() / 7;
+
+	function handleScreenResize(e) {
+		setScreenWidth(window.innerWidth);
+
+		setWidth(getElementRect(gridRef).width);
+	}
 
 	function handleClick(e, day) {
 		// LEFT CLICK ONLY!
+		// console.log(e, day, store.gesture);
 		if (e.buttons !== 1) return;
 
 		const { top, height } = getElementRect(gridRef);
@@ -46,7 +56,7 @@ export default function WeeklyAvailability(props) {
 		);
 
 		if (slotClicked) {
-			console.log({ slotClicked });
+			// console.log({ slotClicked });
 			setStore('gesture', 'drag:ready');
 			setStore('selectedItem', { id: slotClicked.id, day });
 			lastSelectedItem = store.selectedItem;
@@ -178,7 +188,7 @@ export default function WeeklyAvailability(props) {
 	}
 
 	function handlePointerUp(e) {
-		console.log('handlePointerUp', store.selectedItem, store.gesture);
+		// console.log("handlePointerUp", store.selectedItem, store.gesture);
 		if (store.selectedItem) {
 			// clicked simply (no drag)
 			if (store.gesture === 'drag:ready') {
@@ -192,8 +202,6 @@ export default function WeeklyAvailability(props) {
 
 			const merged = getMergedTimeslots(slot, store.availability[day]);
 
-			const el = document.querySelector(`#${store.selectedItem.id}`);
-
 			setStore('selectedItem', null);
 			setStore('availability', day, prev => [...merged]);
 		}
@@ -203,16 +211,21 @@ export default function WeeklyAvailability(props) {
 	}
 
 	createEffect(() => {
-		document.body.style.cursor = store.cursor;
+		// document.body.style.cursor = store.cursor;
+		console.log({ isEditMode: store.isEditMode, lastSelectedItem });
 	});
+
+	createEffect(() => handleScreenResize());
 
 	onMount(() => {
 		document.addEventListener('pointerup', handlePointerUp);
 		document.addEventListener('pointermove', handlePointerMove);
+		window.addEventListener('resize', handleScreenResize);
 	});
 	onCleanup(() => {
 		document.removeEventListener('pointerup', handlePointerUp);
 		document.removeEventListener('pointermove', handlePointerMove);
+		window.removeEventListener('resize', handleScreenResize);
 	});
 
 	return (
@@ -233,17 +246,20 @@ export default function WeeklyAvailability(props) {
 								day={day}
 								timeslots={store.availability[day]}
 								onpointerdown={e => handleClick(e, day)}
+								width={columnWidth()}
 							/>
 						)}
 					</For>
 				</div>
 			</OuterGrid>
-
 			<Show when={store.isEditMode}>
 				<EditModal
 					slot={getSlot(lastSelectedItem.day, lastSelectedItem.id)}
 					day={lastSelectedItem.day}
-					onModalClose={e => setStore('isEditMode', false)}
+					onModalClose={e => {
+						console.log('onModalClose');
+						setStore('isEditMode', false);
+					}}
 				/>
 			</Show>
 		</>
